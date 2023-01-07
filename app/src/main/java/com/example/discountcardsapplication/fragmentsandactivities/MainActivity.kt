@@ -1,9 +1,10 @@
-package com.example.discountcardsapplication
+package com.example.discountcardsapplication.fragmentsandactivities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

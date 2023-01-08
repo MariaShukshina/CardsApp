@@ -6,27 +6,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.databinding.CompanyItemBinding
 import com.example.discountcardsapplication.models.Company
 
-class Companiesdapter(): RecyclerView.Adapter<Companiesdapter.PopularMealsViewHolder>() {
+class CompaniesAdapter(): RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
     private var companiesList = listOf<Company>()
     //lateinit var onItemClick: (Company) -> Unit
 
-    fun setMeals(companiesList: List<Company>){
+    fun setCompaniesList(companiesList: List<Company>){
         this.companiesList = companiesList
         notifyDataSetChanged()
     }
 
-    class PopularMealsViewHolder(binding: CompanyItemBinding): RecyclerView.ViewHolder(binding.root){
+    class CompaniesViewHolder(binding: CompanyItemBinding): RecyclerView.ViewHolder(binding.root){
         val companyAvatar = binding.companyAvatar
         val companyName = binding.tvCompanyName
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularMealsViewHolder {
-        return PopularMealsViewHolder(CompanyItemBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompaniesViewHolder {
+        return CompaniesViewHolder(
+            CompanyItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent, false
+            )
+        )
     }
 
-    override fun onBindViewHolder(holder: PopularMealsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CompaniesViewHolder, position: Int) {
 
         holder.companyAvatar.setImageResource(companiesList[position].image)
         holder.companyName.text = companiesList[position].name

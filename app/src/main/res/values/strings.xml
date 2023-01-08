@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="other_discount_card">Other discount card</string>
+    <string name="add_a_card">Add a card</string>
+    <string name="list_of_cards">List of cards</string>
 </resources>

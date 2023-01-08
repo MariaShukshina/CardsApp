@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragmentsandactivities.HomeFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHappyPlacesList"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSearchCards"
+        android:background="@color/teal_200"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:theme="@style/CustomToolbarStyle"
+        android:layout_height="?attr/actionBarSize"
+         >
 
+        <androidx.appcompat.widget.SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSavedCardsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarSearchCards"
+        android:layout_margin="4dp"
+        android:contentDescription="@string/list_of_cards"
+        tools:listitem="@layout/card_item"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
         app:srcCompat="@drawable/ic_add"
-        />
+        android:contentDescription="@string/add_a_card"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@id/rvSavedCardsList"/>
 
-</FrameLayout>
+</RelativeLayout>

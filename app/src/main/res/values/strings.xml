@@ -5,4 +5,11 @@
     <string name="other_discount_card">Other discount card</string>
     <string name="add_a_card">Add a card</string>
     <string name="list_of_cards">List of cards</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="choose_your_photo">Choose your photo</string>
+    <string name="company_name">Company name</string>
+    <string name="card_number">Card number</string>
+    <string name="scan_icon">Scan icon</string>
+    <string name="description">Description</string>
 </resources>

@@ -8,7 +8,7 @@ import com.example.discountcardsapplication.models.Company
 
 class CompaniesAdapter(): RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
     private var companiesList = listOf<Company>()
-    //lateinit var onItemClick: (Company) -> Unit
+    lateinit var onItemClick: (Company) -> Unit
 
     fun setCompaniesList(companiesList: List<Company>){
         this.companiesList = companiesList
@@ -35,7 +35,7 @@ class CompaniesAdapter(): RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHol
         holder.companyName.text = companiesList[position].name
 
         holder.itemView.setOnClickListener {
-            //onItemClick.invoke(companiesList[position])
+            onItemClick.invoke(companiesList[position])
         }
     }
 

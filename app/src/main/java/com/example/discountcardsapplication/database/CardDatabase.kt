@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.discountcardsapplication.models.Card
 
 @Database(entities = [Card::class], version = 1)
-@TypeConverters(CardTypeConverter::class)
+// @TypeConverters(CardTypeConverter::class)
 
 abstract class CardsDatabase: RoomDatabase() {
     abstract fun getCardsDao(): CardsDao

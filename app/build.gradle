@@ -74,4 +74,7 @@ dependencies {
     //Barcode scanning
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
 
+    //Dexter
+    implementation 'com.karumi:dexter:6.2.3'
+
 }

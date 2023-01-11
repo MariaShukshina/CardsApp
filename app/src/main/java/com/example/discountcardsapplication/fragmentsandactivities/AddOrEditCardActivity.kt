@@ -1,6 +1,7 @@
 package com.example.discountcardsapplication.fragmentsandactivities
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -11,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
+import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
+import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.CODE
+import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionGrantedResponse
@@ -21,6 +25,8 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddOrEditCardBinding
     private var name: String = ""
     private var image: Int = 0
+    private lateinit var barcodeFormat: BarcodeFormat
+    private lateinit var code: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +47,8 @@ class AddOrEditCardActivity : AppCompatActivity() {
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object: BasePermissionListener() {
                 override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse?) {
-                    startActivity(Intent(this@AddOrEditCardActivity,
-                        ScanCardActivity::class.java))
+                    startActivityForResult(Intent(this@AddOrEditCardActivity,
+                        ScanCardActivity::class.java), SCAN_CODE_REQUEST_CODE)
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
@@ -53,6 +59,22 @@ class AddOrEditCardActivity : AppCompatActivity() {
                 }
 
             }).onSameThread().check()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == Activity.RESULT_OK) {
+            if(requestCode == SCAN_CODE_REQUEST_CODE) {
+                if(data != null) {
+                    barcodeFormat = data.getSerializableExtra(BARCODE_FORMAT) as BarcodeFormat
+                    code = data.getStringExtra(CODE)!!
+                    binding.etCardNumber.setText(code)
+                }
+            }
+        } else {
+            binding.etCardNumber.setText("")
+        }
     }
 
     private fun getDataFromIntentAndSetInViews(){
@@ -84,5 +106,9 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     dialog, _ ->
                 dialog.dismiss()
             }.show()
+    }
+
+    companion object {
+        const val SCAN_CODE_REQUEST_CODE = 1
     }
 }

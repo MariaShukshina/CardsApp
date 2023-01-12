@@ -10,7 +10,7 @@
         android:id="@+id/newCardImage"
         android:layout_width="400dp"
         android:layout_height="200dp"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_placeholder"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -8,11 +8,12 @@ import com.google.zxing.BarcodeFormat
 @Entity(tableName = "card_information")
 data class Card(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val name: String,
-    val imageResource: Int? = null,
-    val customImage: String? = null,
-    val isFavorite: Boolean = false,
-    val qrOrBarCode: String? = null,
-    val barcodeFormat: BarcodeFormat? = null
+    var id: Int,
+    var companyName: String,
+    var imageResource: Int? = null,
+    var customImage: String? = null,
+    var isFavorite: Boolean = false,
+    var qrOrBarCode: String? = null,
+    var barcodeFormat: BarcodeFormat? = null,
+    var description: String? = null
 )

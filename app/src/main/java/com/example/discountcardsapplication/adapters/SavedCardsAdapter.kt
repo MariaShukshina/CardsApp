@@ -1,9 +1,12 @@
 package com.example.discountcardsapplication.adapters
 
 import android.content.res.Configuration
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
@@ -47,8 +50,16 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: SavedCardsViewHolder, position: Int) {
+        Log.i("tag", cardsList[position].imageResource.toString())
 
-        //holder.cardImage.setImageResource(cardsList[position].imageResource)
+        if(cardsList[position].customImage != null){
+            holder.cardImage.setImageURI(cardsList[position].customImage!!.toUri())
+
+        } else if(cardsList[position].imageResource != null){
+            holder.cardImage.setImageResource(cardsList[position].imageResource!!)
+        } else {
+            holder.cardImage.setImageResource(R.drawable.ic_placeholder)
+        }
 
         holder.itemView.setOnClickListener {
             //onItemClick.invoke(companiesList[position])

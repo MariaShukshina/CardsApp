@@ -10,7 +10,7 @@ interface CardsDao {
     suspend fun insertCard(card: Card)
 
     @Update
-    suspend fun update(card: Card)
+    suspend fun updateCard(card: Card)
 
     @Delete
     suspend fun deleteCard(card: Card)

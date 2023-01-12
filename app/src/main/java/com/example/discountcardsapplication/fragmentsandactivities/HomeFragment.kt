@@ -15,15 +15,16 @@ import com.example.discountcardsapplication.databinding.FragmentHomeBinding
 import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.models.Company
 import com.example.discountcardsapplication.models.Constants
+import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var savedCardsAdapter: SavedCardsAdapter
-    private var cardsList = listOf<Card>()
+    private lateinit var mainActivityViewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        mainActivityViewModel = (activity as MainActivity).viewModel
         savedCardsAdapter = SavedCardsAdapter(activity as MainActivity)
     }
 
@@ -39,7 +40,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         prepareCardsRecyclerView()
-        setupInfoInRecyclerView()
+        observeAllCardsLiveData()
 
         onFabAddCardClick()
     }
@@ -63,7 +64,10 @@ class HomeFragment : Fragment() {
             adapter = savedCardsAdapter
         }
     }
-    private fun setupInfoInRecyclerView(){
-        //TODO filling info
+
+    private fun observeAllCardsLiveData(){
+        mainActivityViewModel.getCards.observe(viewLifecycleOwner){
+            savedCardsAdapter.setSavedCardsList(it)
+        }
     }
 }

@@ -10,12 +10,13 @@ import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
+import com.example.discountcardsapplication.models.Company
 
 
 class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
     private var cardsList = listOf<Card>()
 
-    //lateinit var onItemClick: (Company) -> Unit
+    lateinit var onItemClick: (Card) -> Unit
 
     fun setSavedCardsList(cardsList: List<Card>){
         this.cardsList = cardsList
@@ -62,7 +63,7 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
         }
 
         holder.itemView.setOnClickListener {
-            //onItemClick.invoke(companiesList[position])
+            onItemClick.invoke(cardsList[position])
         }
     }
 

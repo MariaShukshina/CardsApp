@@ -12,4 +12,5 @@
     <string name="card_number">Card number</string>
     <string name="scan_icon">Scan icon</string>
     <string name="description">Description</string>
+    <string name="saved_card">Saved card</string>
 </resources>

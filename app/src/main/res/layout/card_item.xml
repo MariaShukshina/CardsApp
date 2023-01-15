@@ -8,15 +8,15 @@
         android:id="@+id/cardImage"
         android:layout_width="560dp"
         android:layout_height="280dp"
-        tools:src="@mipmap/ic_launcher"
+        tools:src="@drawable/ic_placeholder"
         android:scaleType="fitXY"
         android:layout_margin="2dp"
         />
 
     <ImageView
         android:id="@+id/favoriteIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_favorite"
         android:layout_gravity="top|end"
         android:layout_margin="2dp"

@@ -13,4 +13,8 @@
     <string name="scan_icon">Scan icon</string>
     <string name="description">Description</string>
     <string name="saved_card">Saved card</string>
+    <string name="choose_code_format">Choose code format</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="done_button">Done</string>
+    <string name="scanned_barcode_image">Scanned barcode image</string>
 </resources>

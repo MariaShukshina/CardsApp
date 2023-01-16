@@ -19,6 +19,7 @@ import androidx.core.graphics.scale
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.discountcardsapplication.R
+import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
@@ -110,6 +111,8 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         }
                         viewModel.insertCard(card)
                         finish()
+                    } else {
+                        //TODO
                     }
                 }
             }

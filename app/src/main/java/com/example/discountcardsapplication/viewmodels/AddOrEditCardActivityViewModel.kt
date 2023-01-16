@@ -18,7 +18,7 @@ class AddOrEditCardActivityViewModel(private val cardsDatabase: CardsDatabase): 
         cardsDatabase.getCardsDao().updateCard(card)
     }
 
-    fun deleteStudent(card: Card) = viewModelScope.launch {
+    fun deleteCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().deleteCard(card)
     }
 

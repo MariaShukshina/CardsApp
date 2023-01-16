@@ -3,6 +3,7 @@ package com.example.discountcardsapplication.fragmentsandactivities
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.ActivityGeneratedCodeBinding

@@ -50,7 +50,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private var barcodeFormat: BarcodeFormat? = null
     private var code: String? = null
 
-    val viewModel: AddOrEditCardActivityViewModel by lazy {
+    private val viewModel: AddOrEditCardActivityViewModel by lazy {
         val cardsDatabase = CardsDatabase.getInstance(this)
         val factory = AddOrEditCardActivityViewModelFactory(cardsDatabase)
         ViewModelProvider(this, factory)[AddOrEditCardActivityViewModel::class.java]
@@ -82,7 +82,6 @@ class AddOrEditCardActivity : AppCompatActivity() {
     }
 
     private fun saveCardToDatabase() {
-        if(imageResource != 0 && companyName != ""){
             when {
                 binding.etCompanyName.text.isNullOrEmpty() -> {
                     Toast.makeText(this, "Please enter a company name.",
@@ -95,32 +94,25 @@ class AddOrEditCardActivity : AppCompatActivity() {
                 }
                 else -> {
                     if(barcodeFormat != null && code != null) {
-                        val card: Card
-                        if(customImage == null) {
-                            card = Card(
-                                id = 0,
-                                imageResource = imageResource,
-                                companyName = binding.etCompanyName.text.toString(),
-                                barcodeFormat = barcodeFormat,
-                                qrOrBarCode = code,
-                                description = binding.etDescription.text.toString()
-                            )
+                        val card = Card(
+                            id = 0,
+                            companyName = binding.etCompanyName.text.toString(),
+                            barcodeFormat = barcodeFormat,
+                            qrOrBarCode = code,
+                            description = binding.etDescription.text.toString()
+                        )
+                        if(customImage != null) {
+                            card.customImage = customImage.toString()
+                        } else if(imageResource != 0) {
+                            card.imageResource = imageResource
                         } else {
-                            card = Card(
-                                id = 0,
-                                customImage = customImage.toString(),
-                                companyName = binding.etCompanyName.text.toString(),
-                                barcodeFormat = barcodeFormat,
-                                qrOrBarCode = code,
-                                description = binding.etDescription.text.toString()
-                            )
+                            imageResource = R.drawable.ic_placeholder
                         }
                         viewModel.insertCard(card)
                         finish()
                     }
                 }
             }
-        }
     }
 
     private fun openScanActivity() {
@@ -211,7 +203,8 @@ class AddOrEditCardActivity : AppCompatActivity() {
     }
 
     private fun setupButtonDoneColor(){
-        if(binding.etCompanyName.text!!.isNotEmpty() && binding.etCardNumber.text!!.isNotEmpty()){
+        if(binding.etCompanyName.text!!.isNotEmpty()
+            && binding.etCardNumber.text!!.isNotEmpty() && barcodeFormat != null){
             binding.buttonDone.setBackgroundColor(resources.getColor(R.color.light_salmon))
         } else {
             binding.buttonDone.setBackgroundColor(resources.getColor(R.color.teal_700))

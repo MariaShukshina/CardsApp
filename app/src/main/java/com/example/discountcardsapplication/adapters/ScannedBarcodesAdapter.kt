@@ -1,15 +1,17 @@
 package com.example.discountcardsapplication.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.BarcodeformatItemBinding
 import com.example.discountcardsapplication.models.GeneratedResult
 
 
 class ScannedBarcodesAdapter(): RecyclerView.Adapter<ScannedBarcodesAdapter.ScannedBarcodesViewHolder>() {
     private var barcodesList = listOf<GeneratedResult>()
-    //lateinit var onItemClick: (GeneratedResult) -> Unit
+    lateinit var onItemClick: (GeneratedResult) -> Unit
 
     fun setBarcodesList(barcodesList: List<GeneratedResult>){
         this.barcodesList = barcodesList
@@ -36,9 +38,11 @@ class ScannedBarcodesAdapter(): RecyclerView.Adapter<ScannedBarcodesAdapter.Scan
         holder.barcodeImage.setImageBitmap(barcodesList[position].bitmap)
         holder.barcodeFormatName.text = barcodesList[position].barcodeFormat.toString()
         holder.scannedInfo.text = barcodesList[position].qrCode
-        /*holder.itemView.setOnClickListener {
+        holder.itemView.setOnClickListener {
+            // TODO changing color of background
+            //holder.itemView.setBackgroundColor(Color.LTGRAY)
             onItemClick.invoke(barcodesList[position])
-        }*/
+        }
     }
 
     override fun getItemCount(): Int {

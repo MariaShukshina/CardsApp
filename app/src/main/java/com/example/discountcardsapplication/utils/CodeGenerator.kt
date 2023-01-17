@@ -45,6 +45,7 @@ class CodeGenerator {
             val bitmap: Bitmap = barCodeEncoder.createBitmap(bitMatrix)
             result.bitmap = bitmap
             result.qrCode = inputText
+            result.barcodeFormat = barcodeFormat
 
         } catch (e: Exception) {
             e.printStackTrace()

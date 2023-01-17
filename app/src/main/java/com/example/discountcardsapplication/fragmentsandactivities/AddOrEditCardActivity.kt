@@ -3,10 +3,7 @@ package com.example.discountcardsapplication.fragmentsandactivities
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
+import android.content.*
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -15,18 +12,21 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.scale
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.discountcardsapplication.R
-import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
+import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SCANNED_BARCODE_FORMAT
+import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SCANNED_INFO
+import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SEND_SELECTED_INFO
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.CODE
 import com.example.discountcardsapplication.models.Card
+import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.utils.CodeGenerator
 import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModel
 import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModelFactory
 import com.google.zxing.BarcodeFormat
@@ -70,13 +70,13 @@ class AddOrEditCardActivity : AppCompatActivity() {
         binding.buttonLoadYourPhoto.setOnClickListener {
             choosePhotoFromGallery()
         }
-        binding.buttonCancel.setOnClickListener {
+        binding.createCardButtonCancel.setOnClickListener {
             finish()
         }
         binding.scanIcon.setOnClickListener {
             openScanActivity()
         }
-        binding.buttonDone.setOnClickListener {
+        binding.createCardButtonDone.setOnClickListener {
             saveCardToDatabase()
         }
         getDataFromIntentAndSetInViews()
@@ -94,8 +94,9 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                 }
                 else -> {
+                    var card: Card
                     if(barcodeFormat != null && code != null) {
-                        val card = Card(
+                        card = Card(
                             id = 0,
                             companyName = binding.etCompanyName.text.toString(),
                             barcodeFormat = barcodeFormat,
@@ -107,12 +108,60 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         } else if(imageResource != 0) {
                             card.imageResource = imageResource
                         } else {
-                            imageResource = R.drawable.ic_placeholder
+                            card.imageResource = R.drawable.ic_placeholder
                         }
                         viewModel.insertCard(card)
                         finish()
                     } else {
-                        //TODO
+                        val barcodeFormatsList = listOf(
+                            BarcodeFormat.CODE_39,
+                            BarcodeFormat.CODE_128,
+                            BarcodeFormat.EAN_8,
+                            BarcodeFormat.EAN_13,
+                            BarcodeFormat.QR_CODE
+                        )
+                        val generatedResultsList = ArrayList<GeneratedResult>()
+                        for(barcodeFormat in barcodeFormatsList) {
+                            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
+                                binding.etCardNumber.text.toString(),
+                                barcodeFormat
+                            )
+                            if(generatedResult.bitmap != null) {
+                                generatedResultsList.add(generatedResult)
+                            }
+                        }
+                        val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList)
+                        chooseBarcodeFormatCustomDialog.show()
+                        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
+
+                        val broadcastReceiver = object: BroadcastReceiver() {
+                            override fun onReceive(context: Context, intent: Intent) {
+                                if (intent.action == SEND_SELECTED_INFO) {
+                                    barcodeFormat = intent.getSerializableExtra(SCANNED_BARCODE_FORMAT) as BarcodeFormat?
+                                    code = intent.getStringExtra(SCANNED_INFO)
+                                    card = Card(
+                                        id = 0,
+                                        companyName = binding.etCompanyName.text.toString(),
+                                        barcodeFormat = barcodeFormat,
+                                        qrOrBarCode = code,
+                                        description = binding.etDescription.text.toString()
+                                    )
+                                    if(customImage != null) {
+                                        card.customImage = customImage.toString()
+                                    } else if(imageResource != 0) {
+                                        card.imageResource = imageResource
+                                    } else {
+                                        card.imageResource = R.drawable.ic_placeholder
+                                    }
+                                    viewModel.insertCard(card)
+                                    finish()
+                                } else {
+                                    Toast.makeText(this@AddOrEditCardActivity,
+                                        "Please check the code you've entered.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                        registerReceiver(broadcastReceiver, IntentFilter(SEND_SELECTED_INFO))
                     }
                 }
             }
@@ -169,8 +218,6 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     }
                 }
             }
-        } else {
-            binding.etCardNumber.setText("")
         }
     }
 
@@ -208,9 +255,9 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private fun setupButtonDoneColor(){
         if(binding.etCompanyName.text!!.isNotEmpty()
             && binding.etCardNumber.text!!.isNotEmpty() && barcodeFormat != null){
-            binding.buttonDone.setBackgroundColor(resources.getColor(R.color.light_salmon))
+            binding.createCardButtonDone.setBackgroundColor(resources.getColor(R.color.light_salmon))
         } else {
-            binding.buttonDone.setBackgroundColor(resources.getColor(R.color.teal_700))
+            binding.createCardButtonDone.setBackgroundColor(resources.getColor(R.color.teal_700))
         }
     }
 

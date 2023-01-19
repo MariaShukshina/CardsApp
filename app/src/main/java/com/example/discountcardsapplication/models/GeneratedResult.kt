@@ -9,13 +9,15 @@ data class GeneratedResult (
     var errorMessage: String? = null,
     var bitmap: Bitmap? = null,
     var qrCode: String? = null,
-    var barcodeFormat: BarcodeFormat? = null
+    var barcodeFormat: BarcodeFormat? = null,
+    var isSelected: Int = 0
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readParcelable(Bitmap::class.java.classLoader),
         parcel.readString(),
         parcel.readSerializable() as BarcodeFormat?,
+        parcel.readInt()
     ) {
     }
 
@@ -24,6 +26,7 @@ data class GeneratedResult (
         parcel.writeParcelable(bitmap, flags)
         parcel.writeString(qrCode)
         parcel.writeSerializable(barcodeFormat)
+        parcel.writeInt(isSelected)
     }
 
     override fun describeContents(): Int {

@@ -12,7 +12,6 @@ import com.example.discountcardsapplication.models.GeneratedResult
 class ScannedBarcodesAdapter(): RecyclerView.Adapter<ScannedBarcodesAdapter.ScannedBarcodesViewHolder>() {
     private var barcodesList = listOf<GeneratedResult>()
     lateinit var onItemClick: (GeneratedResult) -> Unit
-    private var isSelected: Boolean = false
 
     fun setBarcodesList(barcodesList: List<GeneratedResult>){
         this.barcodesList = barcodesList
@@ -39,15 +38,23 @@ class ScannedBarcodesAdapter(): RecyclerView.Adapter<ScannedBarcodesAdapter.Scan
         holder.barcodeImage.setImageBitmap(barcodesList[position].bitmap)
         holder.barcodeFormatName.text = barcodesList[position].barcodeFormat.toString()
         holder.scannedInfo.text = barcodesList[position].qrCode
+
+        if(barcodesList[position].isSelected == 1){
+            holder.itemView.setBackgroundColor(Color.LTGRAY)
+        } else {
+            holder.itemView.setBackgroundColor(Color.WHITE)
+        }
+
         holder.itemView.setOnClickListener {
-            // TODO changing color of background
-            if(!isSelected){
-                isSelected = true
-                holder.itemView.setBackgroundColor(Color.LTGRAY)
-            } else {
-                isSelected = false
-                holder.itemView.setBackgroundColor(Color.WHITE)
+            for((index, item) in barcodesList.withIndex()) {
+                if (index == position) {
+                    item.isSelected = 1
+                } else {
+                    item.isSelected = 0
+                }
+                notifyItemChanged(index)
             }
+            barcodesList[position].isSelected = 1
             onItemClick.invoke(barcodesList[position])
         }
     }

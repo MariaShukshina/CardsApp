@@ -50,6 +50,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private var customImage: Uri? = null
     private var barcodeFormat: BarcodeFormat? = null
     private var code: String? = null
+    private var broadcastReceiver: BroadcastReceiver? = null
 
     private val viewModel: AddOrEditCardActivityViewModel by lazy {
         val cardsDatabase = CardsDatabase.getInstance(this)
@@ -134,7 +135,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         chooseBarcodeFormatCustomDialog.show()
                         chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
 
-                        val broadcastReceiver = object: BroadcastReceiver() {
+                        broadcastReceiver = object: BroadcastReceiver() {
                             override fun onReceive(context: Context, intent: Intent) {
                                 if (intent.action == SEND_SELECTED_INFO) {
                                     barcodeFormat = intent.getSerializableExtra(SCANNED_BARCODE_FORMAT) as BarcodeFormat?
@@ -165,6 +166,13 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver)
+        }
     }
 
     private fun openScanActivity() {

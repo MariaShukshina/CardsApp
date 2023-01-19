@@ -15,7 +15,7 @@ data class GeneratedResult (
         parcel.readString(),
         parcel.readParcelable(Bitmap::class.java.classLoader),
         parcel.readString(),
-        parcel.readSerializable() as BarcodeFormat?
+        parcel.readSerializable() as BarcodeFormat?,
     ) {
     }
 

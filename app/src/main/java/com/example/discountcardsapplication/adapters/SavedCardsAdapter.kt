@@ -65,6 +65,15 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
         holder.itemView.setOnClickListener {
             onItemClick.invoke(cardsList[position])
         }
+        holder.favoriteIcon.setOnClickListener {
+            if(!cardsList[position].isFavorite){
+                cardsList[position].isFavorite = true
+                holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_selected)
+            } else {
+                cardsList[position].isFavorite = false
+                holder.favoriteIcon.setImageResource(R.drawable.ic_favorite)
+            }
+        }
     }
 
     override fun getItemCount(): Int {

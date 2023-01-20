@@ -34,11 +34,13 @@
         android:id="@+id/fabAddCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/rvSavedCardsList"
+        android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
+        android:contentDescription="@string/add_a_card"
+        app:fabSize="normal"
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/white"
-        android:contentDescription="@string/add_a_card"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@id/rvSavedCardsList"/>
+        tools:ignore="ImageContrastCheck" />
 
 </RelativeLayout>

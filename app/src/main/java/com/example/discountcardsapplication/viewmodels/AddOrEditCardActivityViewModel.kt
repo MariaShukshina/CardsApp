@@ -8,8 +8,6 @@ import kotlinx.coroutines.launch
 
 class AddOrEditCardActivityViewModel(private val cardsDatabase: CardsDatabase): ViewModel() {
 
-    val getCards = cardsDatabase.getCardsDao().getAllCards()
-
     fun insertCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().insertCard(card)
     }
@@ -17,9 +15,4 @@ class AddOrEditCardActivityViewModel(private val cardsDatabase: CardsDatabase): 
     fun updateCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().updateCard(card)
     }
-
-    fun deleteCard(card: Card) = viewModelScope.launch {
-        cardsDatabase.getCardsDao().deleteCard(card)
-    }
-
 }

@@ -11,6 +11,7 @@
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:scaleType="fitXY"
+        android:contentDescription="@string/company_avatar"
         android:src="@drawable/ic_placeholder"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,8 +78,8 @@
             android:inputType="text"
             android:textColor="@color/black"
             android:textColorHint="@color/teal_700"
-            android:textSize="16sp"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -10,10 +10,6 @@ class MainActivityViewModel(private val cardsDatabase: CardsDatabase): ViewModel
 
     val getCards = cardsDatabase.getCardsDao().getAllCards()
 
-    fun insertCard(card: Card) = viewModelScope.launch {
-        cardsDatabase.getCardsDao().insertCard(card)
-    }
-
     fun updateCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().updateCard(card)
     }

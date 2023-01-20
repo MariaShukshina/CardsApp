@@ -1,8 +1,7 @@
 package com.example.discountcardsapplication.utils;
 
 public class EAN13CodeBuilder {
-    private String codeStringValue;
-    private String generatedCode;
+    private final String codeStringValue;
     private String fullCode;
 
     public EAN13CodeBuilder(String codeString)
@@ -15,29 +14,28 @@ public class EAN13CodeBuilder {
     {
         return fullCode;
     }
-    public String getCode()
+    /*public String getCode()
     {
         return generatedCode;
-
-    }
+    }*/
     // this method generates EAN 13 control number ans returns full
     // string to encode
     private String createFullCode()
     {
 
-        int chetVal = 0, nechetVal = 0;
+        int evenVal = 0, oddVal = 0;
         String codeToParse = codeStringValue;
 
         for( int index = 0;index<6;index++ )
         {
-            chetVal += Integer.valueOf(codeToParse.substring(
+            evenVal += Integer.valueOf(codeToParse.substring(
                     index*2+1,index*2+2)).intValue();
-            nechetVal += Integer.valueOf(codeToParse.substring(
+            oddVal += Integer.valueOf(codeToParse.substring(
                     index*2,index*2+1)).intValue();
         }
 
-        chetVal *= 3;
-        int controlNumber = 10 - (chetVal+nechetVal)%10;
+        evenVal *= 3;
+        int controlNumber = 10 - (evenVal+oddVal)%10;
         if( controlNumber == 10 ) controlNumber  = 0;
 
         codeToParse += String.valueOf(controlNumber);
@@ -72,9 +70,7 @@ public class EAN13CodeBuilder {
     private String createEAN13Code(String rawCode)
     {
         int firstFlag = Integer.valueOf(
-
                 rawCode.substring(0,1)
-
         ).intValue();
 
         String leftString = rawCode.substring(1,7);
@@ -194,9 +190,9 @@ public class EAN13CodeBuilder {
         fullCode = createFullCode();
         System.out.println( "Full code: " + fullCode );
 
-        generatedCode = createEAN13Code(fullCode);
+        String generatedCode = createEAN13Code(fullCode);
 
-        System.out.println( "Generated code: " + generatedCode );
+        System.out.println( "Generated code: " + generatedCode);
 
     }
 }

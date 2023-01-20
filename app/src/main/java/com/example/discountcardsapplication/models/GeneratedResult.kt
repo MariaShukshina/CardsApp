@@ -18,8 +18,7 @@ data class GeneratedResult (
         parcel.readString(),
         parcel.readSerializable() as BarcodeFormat?,
         parcel.readInt()
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(errorMessage)

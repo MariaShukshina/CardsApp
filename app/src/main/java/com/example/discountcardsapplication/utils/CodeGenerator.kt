@@ -21,7 +21,7 @@ class CodeGenerator {
         val result = GeneratedResult()
 
         if (inputText.length < 12 || inputText.length > 13) {
-            result.errorMessage ="The correct number of digits is 13.";
+            result.errorMessage ="The correct number of digits is 13."
             return result
         }
 

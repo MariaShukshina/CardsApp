@@ -10,13 +10,13 @@ import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.models.Company
 
 
 class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
     private var cardsList = listOf<Card>()
 
-    lateinit var onItemClick: (Card) -> Unit
+    lateinit var onItemClickHandler: (Card) -> Unit
+    lateinit var onFavIconClickHandler: (Card) -> Unit
 
     fun setSavedCardsList(cardsList: List<Card>){
         this.cardsList = cardsList
@@ -53,6 +53,12 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
     override fun onBindViewHolder(holder: SavedCardsViewHolder, position: Int) {
         Log.i("tag", cardsList[position].imageResource.toString())
 
+        if(cardsList[position].isFavorite){
+            holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_selected)
+        } else {
+            holder.favoriteIcon.setImageResource(R.drawable.ic_favorite)
+        }
+
         if(cardsList[position].customImage != null){
             holder.cardImage.setImageURI(cardsList[position].customImage!!.toUri())
 
@@ -63,16 +69,11 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
         }
 
         holder.itemView.setOnClickListener {
-            onItemClick.invoke(cardsList[position])
+            onItemClickHandler.invoke(cardsList[position])
         }
         holder.favoriteIcon.setOnClickListener {
-            if(!cardsList[position].isFavorite){
-                cardsList[position].isFavorite = true
-                holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_selected)
-            } else {
-                cardsList[position].isFavorite = false
-                holder.favoriteIcon.setImageResource(R.drawable.ic_favorite)
-            }
+            onFavIconClickHandler.invoke(cardsList[position])
+            notifyItemChanged(position)
         }
     }
 

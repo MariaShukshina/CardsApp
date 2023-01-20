@@ -20,8 +20,6 @@ public class EAN13CodeBuilder {
         return generatedCode;
 
     }
-
-    ////////////////////////////////////////////////////////////////
     // this method generates EAN 13 control number ans returns full
     // string to encode
     private String createFullCode()
@@ -69,7 +67,6 @@ public class EAN13CodeBuilder {
         return retVal;
 
     }
-    //////////////////////////////////////////////
     // this method generates EAN 13 encoded string
     // algorithm can be found at http://en.wikipedia.org/wiki/EAN-13
     private String createEAN13Code(String rawCode)

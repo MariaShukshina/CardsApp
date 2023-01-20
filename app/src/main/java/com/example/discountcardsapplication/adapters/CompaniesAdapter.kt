@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.databinding.CompanyItemBinding
 import com.example.discountcardsapplication.models.Company
 
-class CompaniesAdapter(): RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
+class CompaniesAdapter : RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
     private var companiesList = listOf<Company>()
     lateinit var onItemClick: (Company) -> Unit
 

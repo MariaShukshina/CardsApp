@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.example.discountcardsapplication.models.Card
 
 @Database(entities = [Card::class], version = 1)

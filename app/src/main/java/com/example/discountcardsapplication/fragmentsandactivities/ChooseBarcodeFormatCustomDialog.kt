@@ -8,13 +8,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.Toast
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.databinding.ChooseBarcodeformatCustomDialogBinding
-import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 

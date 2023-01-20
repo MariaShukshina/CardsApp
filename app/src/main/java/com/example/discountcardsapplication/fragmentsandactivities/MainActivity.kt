@@ -1,15 +1,13 @@
 package com.example.discountcardsapplication.fragmentsandactivities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityMainBinding
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModel
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModelFactory
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModelFactory
 

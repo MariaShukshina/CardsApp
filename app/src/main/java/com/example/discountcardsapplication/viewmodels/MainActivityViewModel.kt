@@ -13,9 +13,10 @@ class MainActivityViewModel(private val cardsDatabase: CardsDatabase): ViewModel
     fun updateCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().updateCard(card)
     }
-
     fun deleteCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().deleteCard(card)
     }
-
+    fun insertCard(card: Card) = viewModelScope.launch {
+        cardsDatabase.getCardsDao().insertCard(card)
+    }
 }

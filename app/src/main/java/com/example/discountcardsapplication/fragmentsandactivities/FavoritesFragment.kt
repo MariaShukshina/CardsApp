@@ -65,7 +65,7 @@ class FavoritesFragment : Fragment() {
                     favoritesList.add(card)
                 }
             }
-            savedCardsAdapter.setSavedCardsList(favoritesList)
+            savedCardsAdapter.differ.submitList(favoritesList)
         }
     }
     private fun onFavIconClick(card: Card) {

@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentHomeBinding
 import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.utils.CodeGenerator
 import com.example.discountcardsapplication.utils.OnCardClickUtil
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -81,11 +84,33 @@ class HomeFragment : Fragment() {
             }
             adapter = savedCardsAdapter
         }
+        val itemTouchHelper = object: ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+        ){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ) = true
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val deletedCard = savedCardsAdapter.differ.currentList[position]
+                mainActivityViewModel.deleteCard(deletedCard)
+                Snackbar.make(requireView(), "Card is deleted", Snackbar.LENGTH_LONG).setAction(
+                    "Undo"
+                ) {
+                    mainActivityViewModel.insertCard(deletedCard)
+                }.show()
+            }
+        }
+        ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvSavedCardsList)
     }
 
     private fun observeAllCardsLiveData(){
         mainActivityViewModel.getCards.observe(viewLifecycleOwner){
-            savedCardsAdapter.setSavedCardsList(it)
+            savedCardsAdapter.differ.submitList(it)
         }
     }
     companion object {

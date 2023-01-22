@@ -95,77 +95,86 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    var card: Card
                     if(barcodeFormat != null && code != null) {
-                        card = Card(
-                            id = 0,
-                            companyName = binding.etCompanyName.text.toString(),
-                            barcodeFormat = barcodeFormat,
-                            qrOrBarCode = code,
-                            description = binding.etDescription.text.toString()
-                        )
-                        if(customImage != null) {
-                            card.customImage = customImage.toString()
-                        } else if(imageResource != 0) {
-                            card.imageResource = imageResource
-                        } else {
-                            card.imageResource = R.drawable.ic_placeholder
-                        }
+                        val card = createAutomaticScannedCard()
                         viewModel.insertCard(card)
                         finish()
                     } else {
-                        val barcodeFormatsList = listOf(
-                            BarcodeFormat.CODE_39,
-                            BarcodeFormat.CODE_128,
-                            BarcodeFormat.EAN_8,
-                            BarcodeFormat.EAN_13,
-                            BarcodeFormat.QR_CODE
-                        )
-                        val generatedResultsList = ArrayList<GeneratedResult>()
-                        for(barcodeFormat in barcodeFormatsList) {
-                            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
-                                binding.etCardNumber.text.toString(),
-                                barcodeFormat
-                            )
-                            if(generatedResult.bitmap != null) {
-                                generatedResultsList.add(generatedResult)
-                            }
+                        createCardManually{
+                            viewModel.insertCard(it)
+                            finish()
                         }
-                        val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList)
-                        chooseBarcodeFormatCustomDialog.show()
-                        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
-
-                        broadcastReceiver = object: BroadcastReceiver() {
-                            override fun onReceive(context: Context, intent: Intent) {
-                                if (intent.action == SEND_SELECTED_INFO) {
-                                    barcodeFormat = intent.getSerializableExtra(SCANNED_BARCODE_FORMAT) as BarcodeFormat?
-                                    code = intent.getStringExtra(SCANNED_INFO)
-                                    card = Card(
-                                        id = 0,
-                                        companyName = binding.etCompanyName.text.toString(),
-                                        barcodeFormat = barcodeFormat,
-                                        qrOrBarCode = code,
-                                        description = binding.etDescription.text.toString()
-                                    )
-                                    if(customImage != null) {
-                                        card.customImage = customImage.toString()
-                                    } else if(imageResource != 0) {
-                                        card.imageResource = imageResource
-                                    } else {
-                                        card.imageResource = R.drawable.ic_placeholder
-                                    }
-                                    viewModel.insertCard(card)
-                                    finish()
-                                } else {
-                                    Toast.makeText(this@AddOrEditCardActivity,
-                                        "Please check the code you've entered.", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                        registerReceiver(broadcastReceiver, IntentFilter(SEND_SELECTED_INFO))
                     }
                 }
             }
+    }
+    private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
+        val barcodeFormatsList = listOf(
+            BarcodeFormat.CODE_39,
+            BarcodeFormat.CODE_128,
+            BarcodeFormat.EAN_8,
+            BarcodeFormat.EAN_13,
+            BarcodeFormat.QR_CODE
+        )
+        val generatedResultsList = ArrayList<GeneratedResult>()
+        for(barcodeFormat in barcodeFormatsList) {
+            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
+                binding.etCardNumber.text.toString(),
+                barcodeFormat
+            )
+            if(generatedResult.bitmap != null) {
+                generatedResultsList.add(generatedResult)
+            }
+        }
+        val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList)
+        chooseBarcodeFormatCustomDialog.show()
+        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
+
+        broadcastReceiver = object: BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == SEND_SELECTED_INFO) {
+                    barcodeFormat = intent.getSerializableExtra(SCANNED_BARCODE_FORMAT) as BarcodeFormat?
+                    code = intent.getStringExtra(SCANNED_INFO)
+                    val card = Card(
+                        id = 0,
+                        companyName = binding.etCompanyName.text.toString(),
+                        barcodeFormat = barcodeFormat,
+                        qrOrBarCode = code,
+                        description = binding.etDescription.text.toString()
+                    )
+                    if(customImage != null) {
+                        card.customImage = customImage.toString()
+                    } else if(imageResource != 0) {
+                        card.imageResource = imageResource
+                    } else {
+                        card.imageResource = R.drawable.ic_placeholder
+                    }
+                    createdCardHandler.invoke(card)
+                } else {
+                    Toast.makeText(this@AddOrEditCardActivity,
+                        "Please check the code you've entered.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        registerReceiver(broadcastReceiver, IntentFilter(SEND_SELECTED_INFO))
+    }
+
+    private fun createAutomaticScannedCard(): Card {
+        val card = Card(
+            id = 0,
+            companyName = binding.etCompanyName.text.toString(),
+            barcodeFormat = barcodeFormat,
+            qrOrBarCode = code,
+            description = binding.etDescription.text.toString()
+        )
+        if(customImage != null) {
+            card.customImage = customImage.toString()
+        } else if(imageResource != 0) {
+            card.imageResource = imageResource
+        } else {
+            card.imageResource = R.drawable.ic_placeholder
+        }
+        return card
     }
 
     override fun onDestroy() {

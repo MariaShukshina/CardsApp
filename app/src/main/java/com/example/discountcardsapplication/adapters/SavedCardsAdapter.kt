@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.CardItemBinding
@@ -13,15 +15,27 @@ import com.example.discountcardsapplication.models.Card
 
 
 class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
-    private var cardsList = listOf<Card>()
+    //private var cardsList = listOf<Card>()
 
     lateinit var onItemClickHandler: (Card) -> Unit
     lateinit var onFavIconClickHandler: (Card) -> Unit
 
-    fun setSavedCardsList(cardsList: List<Card>){
+   /* fun setSavedCardsList(cardsList: List<Card>){
         this.cardsList = cardsList
         notifyDataSetChanged()
+    }*/
+
+    private val diffUtil = object: DiffUtil.ItemCallback<Card>(){
+        override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Card, newItem: Card): Boolean {
+            return oldItem == newItem
+        }
     }
+
+    val differ = AsyncListDiffer(this, diffUtil)
 
     class SavedCardsViewHolder(binding: CardItemBinding): RecyclerView.ViewHolder(binding.root){
         val cardImage = binding.cardImage
@@ -51,33 +65,34 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: SavedCardsViewHolder, position: Int) {
-        Log.i("tag", cardsList[position].imageResource.toString())
+        val card = differ.currentList[position]
+        Log.i("tag", card.imageResource.toString())
 
-        if(cardsList[position].isFavorite){
+        if(card.isFavorite){
             holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_selected)
         } else {
             holder.favoriteIcon.setImageResource(R.drawable.ic_favorite)
         }
 
-        if(cardsList[position].customImage != null){
-            holder.cardImage.setImageURI(cardsList[position].customImage!!.toUri())
+        if(card.customImage != null){
+            holder.cardImage.setImageURI(card.customImage!!.toUri())
 
-        } else if(cardsList[position].imageResource != null){
-            holder.cardImage.setImageResource(cardsList[position].imageResource!!)
+        } else if(card.imageResource != null){
+            holder.cardImage.setImageResource(card.imageResource!!)
         } else {
             holder.cardImage.setImageResource(R.drawable.ic_placeholder)
         }
 
         holder.itemView.setOnClickListener {
-            onItemClickHandler.invoke(cardsList[position])
+            onItemClickHandler.invoke(card)
         }
         holder.favoriteIcon.setOnClickListener {
-            onFavIconClickHandler.invoke(cardsList[position])
+            onFavIconClickHandler.invoke(card)
             notifyItemChanged(position)
         }
     }
 
     override fun getItemCount(): Int {
-        return cardsList.size
+        return differ.currentList.size
     }
 }

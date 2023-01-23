@@ -13,6 +13,5 @@ data class Card(
     var customImage: String? = null,
     var isFavorite: Boolean = false,
     var qrOrBarCode: String? = null,
-    var barcodeFormat: BarcodeFormat? = null,
-    var description: String? = null
+    var barcodeFormat: BarcodeFormat? = null
 )

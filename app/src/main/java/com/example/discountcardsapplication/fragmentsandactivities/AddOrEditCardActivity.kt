@@ -20,9 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
-import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SCANNED_BARCODE_FORMAT
-import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SCANNED_INFO
-import com.example.discountcardsapplication.fragmentsandactivities.ChooseBarcodeFormatCustomDialog.Companion.SEND_SELECTED_INFO
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
@@ -51,7 +48,6 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private var customImage: Uri? = null
     private var barcodeFormat: BarcodeFormat? = null
     private var code: String? = null
-    private var broadcastReceiver: BroadcastReceiver? = null
     private var isCameraPermissionRequested = false
     private lateinit var mSharedPreferences: SharedPreferences
     private var isReadExternalStoragePermissionRequested = false
@@ -153,36 +149,31 @@ class AddOrEditCardActivity : AppCompatActivity() {
                 generatedResultsList.add(generatedResult)
             }
         }
-        val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList)
-        chooseBarcodeFormatCustomDialog.show()
-        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
-
-        broadcastReceiver = object: BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == SEND_SELECTED_INFO) {
-                    barcodeFormat = intent.getSerializableExtra(SCANNED_BARCODE_FORMAT) as BarcodeFormat?
-                    code = intent.getStringExtra(SCANNED_INFO)
-                    val card = Card(
-                        id = 0,
-                        companyName = binding.etCompanyName.text.toString(),
-                        barcodeFormat = barcodeFormat,
-                        qrOrBarCode = code
-                    )
-                    if(customImage != null) {
-                        card.customImage = customImage.toString()
-                    } else if(imageResource != 0) {
-                        card.imageResource = imageResource
-                    } else {
-                        card.imageResource = R.drawable.ic_placeholder
-                    }
-                    createdCardHandler.invoke(card)
+        if(generatedResultsList.isNotEmpty()){
+            val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList){
+                barcodeFormat = it.barcodeFormat
+                code = it.code
+                val card = Card(
+                    id = 0,
+                    companyName = binding.etCompanyName.text.toString(),
+                    barcodeFormat = barcodeFormat,
+                    qrOrBarCode = code
+                )
+                if(customImage != null) {
+                    card.customImage = customImage.toString()
+                } else if(imageResource != 0) {
+                    card.imageResource = imageResource
                 } else {
-                    Toast.makeText(this@AddOrEditCardActivity,
-                        "Please check the code you've entered.", Toast.LENGTH_SHORT).show()
+                    card.imageResource = R.drawable.ic_placeholder
                 }
+                createdCardHandler.invoke(card)
             }
+            chooseBarcodeFormatCustomDialog.show()
+            chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
+        } else {
+            Toast.makeText(this@AddOrEditCardActivity,
+                "Please check the code you've entered.", Toast.LENGTH_SHORT).show()
         }
-        registerReceiver(broadcastReceiver, IntentFilter(SEND_SELECTED_INFO))
     }
 
     private fun createAutomaticScannedCard(): Card {
@@ -200,13 +191,6 @@ class AddOrEditCardActivity : AppCompatActivity() {
             card.imageResource = R.drawable.ic_placeholder
         }
         return card
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if(broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver)
-        }
     }
 
     private fun openScanActivity() {

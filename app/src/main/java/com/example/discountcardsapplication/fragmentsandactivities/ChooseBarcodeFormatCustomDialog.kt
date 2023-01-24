@@ -2,8 +2,6 @@ package com.example.discountcardsapplication.fragmentsandactivities
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -12,19 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.databinding.ChooseBarcodeformatCustomDialogBinding
+import com.example.discountcardsapplication.models.GeneratedBarcodeForUserToChoose
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 
 class ChooseBarcodeFormatCustomDialog(
-    var activity: Activity,
-    var generatedResultList: ArrayList<GeneratedResult>
+    private var activity: Activity,
+    private var generatedResultList: ArrayList<GeneratedResult>,
+    private var onDataCollected: (GeneratedBarcodeForUserToChoose) -> Unit
     ): Dialog(activity), View.OnClickListener {
 
     private lateinit var scannedBarcodesAdapter: ScannedBarcodesAdapter
     private lateinit var binding: ChooseBarcodeformatCustomDialogBinding
     private var isItemSelected =  false
     private var barcodeFormat: BarcodeFormat? = null
-    private var bitmap: Bitmap? = null
     private var scannedInfo: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +50,6 @@ class ChooseBarcodeFormatCustomDialog(
         scannedBarcodesAdapter.onItemClick = {
             isItemSelected = true
             barcodeFormat = it.barcodeFormat
-            bitmap = it.bitmap
             scannedInfo = it.qrCode
         }
     }
@@ -63,11 +61,7 @@ class ChooseBarcodeFormatCustomDialog(
             }
             R.id.button_done -> {
                 if(isItemSelected) {
-                    val intent = Intent()
-                    intent.action = SEND_SELECTED_INFO
-                    intent.putExtra(SCANNED_INFO, scannedInfo)
-                    intent.putExtra(SCANNED_BARCODE_FORMAT, barcodeFormat)
-                    activity.sendBroadcast(intent)
+                    onDataCollected.invoke(GeneratedBarcodeForUserToChoose(barcodeFormat, scannedInfo))
                     dismiss()
                 } else {
                     Toast.makeText(context, "Please choose barcode format", Toast.LENGTH_SHORT).show()
@@ -75,11 +69,4 @@ class ChooseBarcodeFormatCustomDialog(
             }
         }
     }
-
-    companion object {
-        const val SCANNED_BARCODE_FORMAT = "BARCODE_FORMAT"
-        const val SCANNED_INFO = "SCANNED_INFO"
-        const val SEND_SELECTED_INFO = "SEND_SELECTED_INFO"
-    }
-
 }

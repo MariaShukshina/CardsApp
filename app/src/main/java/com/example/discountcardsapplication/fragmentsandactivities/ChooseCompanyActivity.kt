@@ -18,7 +18,6 @@ class ChooseCompanyActivity : AppCompatActivity() {
     private var companiesList = listOf<Company>()
     private lateinit var companiesSearchView: SearchView
     private var isShowingNoData = false
-    private var filteredCompaniesList: ArrayList<Company> = ArrayList()
 
     companion object {
         const val COMPANY_NAME = "COMPANY_NAME"
@@ -50,7 +49,7 @@ class ChooseCompanyActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filteredCompaniesList = FilterListUtil.filteredCompaniesList(newText, companiesList)
+                val filteredCompaniesList = FilterListUtil.filteredCompaniesList(newText, companiesList)
                 if(filteredCompaniesList.isEmpty() && !isShowingNoData){
                     isShowingNoData = true
                     Toast.makeText(this@ChooseCompanyActivity, "No data found", Toast.LENGTH_SHORT).show()

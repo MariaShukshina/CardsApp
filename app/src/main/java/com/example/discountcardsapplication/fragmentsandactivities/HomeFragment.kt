@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var savedCardsList: List<Card>
     private var isShowingNoData = false
-    private var filteredList: ArrayList<Card> = ArrayList()
+    private var searchText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,18 +63,26 @@ class HomeFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filteredList = FilterListUtil.filterList(newText, savedCardsList)
-                if(filteredList.isEmpty() && !isShowingNoData){
-                    isShowingNoData = true
-                    Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
-                }
-                if(filteredList.isNotEmpty()){
-                    isShowingNoData = false
-                }
-                savedCardsAdapter.differ.submitList(filteredList)
+                searchText = newText
+                savedCardsAdapter.differ.submitList(filterSavedCards(newText, savedCardsList))
                 return true
             }
         })
+    }
+
+    private fun filterSavedCards(text: String?, list: List<Card>): List<Card> {
+        if (text == null || text == "") {
+            return list
+        }
+        val filteredList = FilterListUtil.filterList(text, list)
+        if (filteredList.isEmpty() && !isShowingNoData) {
+            isShowingNoData = true
+            Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
+        }
+        if (filteredList.isNotEmpty()) {
+            isShowingNoData = false
+        }
+        return filteredList
     }
 
     private fun onFavIconClick(card: Card) {
@@ -138,7 +146,7 @@ class HomeFragment : Fragment() {
     private fun observeAllCardsLiveData(){
         mainActivityViewModel.getCards.observe(viewLifecycleOwner){
             savedCardsList = it
-            savedCardsAdapter.differ.submitList(it)
+            savedCardsAdapter.differ.submitList(filterSavedCards(searchText, savedCardsList))
         }
     }
     companion object {

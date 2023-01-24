@@ -241,6 +241,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     barcodeFormat = data.getSerializableExtra(BARCODE_FORMAT) as BarcodeFormat
                     code = data.getStringExtra(CODE)!!
                     binding.etCardNumber.setText(code)
+                    binding.etCardNumber.isFocusableInTouchMode = false
                     Log.i("AddOrEditCardActivity", barcodeFormat.toString())
                 }
                 setupButtonDoneColor()

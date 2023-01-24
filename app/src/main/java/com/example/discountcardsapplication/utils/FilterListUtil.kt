@@ -6,7 +6,7 @@ import java.util.*
 
 class FilterListUtil {
     companion object{
-        fun filterList(text: String?, cardList: List<Card>?): ArrayList<Card> {
+        fun filterList(text: String?, cardList: List<Card>?): List<Card> {
             val filteredCardList: ArrayList<Card> = ArrayList()
             if (cardList != null) {
                 for(card in cardList){

@@ -26,7 +26,7 @@ class FavoritesFragment : Fragment() {
     private lateinit var favSearchView: SearchView
     private var favoritesList = ArrayList<Card>()
     private var isShowingNoData = false
-    private var filteredList: ArrayList<Card> = ArrayList()
+    private var searchText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,58 +52,75 @@ class FavoritesFragment : Fragment() {
 
         favSearchView = binding.favCardsSearchView
         favSearchView.clearFocus()
-        favSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        favSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filteredList = FilterListUtil.filterList(newText, favoritesList)
-                if(filteredList.isEmpty() && !isShowingNoData){
-                    isShowingNoData = true
-                    Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
-                }
-                if(filteredList.isNotEmpty()){
-                    isShowingNoData = false
-                }
-                savedCardsAdapter.differ.submitList(filteredList)
+                searchText = newText
+                savedCardsAdapter.differ.submitList(filterFavorites(newText, favoritesList))
                 return true
             }
         })
     }
+
+    private fun filterFavorites(text: String?, list: List<Card>): List<Card> {
+        if (text == null || text == "") {
+            return list
+        }
+        val filteredList = FilterListUtil.filterList(text, list)
+        if (filteredList.isEmpty() && !isShowingNoData) {
+            isShowingNoData = true
+            Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
+        }
+        if (filteredList.isNotEmpty()) {
+            isShowingNoData = false
+        }
+        return filteredList
+    }
+
     private fun prepareCardsRecyclerView() {
         val orientation = this.resources.configuration.orientation
         binding.rvFavCards.apply {
-            if(orientation == Configuration.ORIENTATION_PORTRAIT){
-                layoutManager = LinearLayoutManager(context,
-                    LinearLayoutManager.VERTICAL, false)
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.VERTICAL, false
+                )
             } else {
-                layoutManager = GridLayoutManager(context, 2,
-                    GridLayoutManager.VERTICAL, false)
+                layoutManager = GridLayoutManager(
+                    context, 2,
+                    GridLayoutManager.VERTICAL, false
+                )
             }
             adapter = savedCardsAdapter
         }
     }
-    private fun observeAllCardsLiveData(){
-        mainActivityViewModel.getCards.observe(viewLifecycleOwner){
-            for(card in it) {
-                if(card.isFavorite) {
+
+    private fun observeAllCardsLiveData() {
+        mainActivityViewModel.getCards.observe(viewLifecycleOwner) {
+            favoritesList = ArrayList()
+            for (card in it) {
+                if (card.isFavorite) {
                     favoritesList.add(card)
                 }
             }
-            savedCardsAdapter.differ.submitList(favoritesList)
+            savedCardsAdapter.differ.submitList(filterFavorites(searchText, favoritesList))
         }
     }
+
     private fun onFavIconClick(card: Card) {
         card.isFavorite = !card.isFavorite
         mainActivityViewModel.updateCard(card)
     }
 
     private fun onCardClick(card: Card) {
-        val codeResult = CodeGenerator().generateQROrBarcodeImage(card.qrOrBarCode!!, card.barcodeFormat!!)
-        if (codeResult.errorMessage != null){
+        val codeResult =
+            CodeGenerator().generateQROrBarcodeImage(card.qrOrBarCode!!, card.barcodeFormat!!)
+        if (codeResult.errorMessage != null) {
             Toast.makeText(context, codeResult.errorMessage, Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             val intent = Intent(activity, GeneratedCodeActivity::class.java)
             OnCardClickUtil.onCardClick(intent, codeResult, card)
             startActivity(intent)

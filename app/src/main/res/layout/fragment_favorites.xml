@@ -14,6 +14,7 @@
         >
 
         <androidx.appcompat.widget.SearchView
+            android:id="@+id/fav_cards_search_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="text" />

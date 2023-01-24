@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,6 +17,7 @@ import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentHomeBinding
 import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.utils.CodeGenerator
+import com.example.discountcardsapplication.utils.FilterListUtil
 import com.example.discountcardsapplication.utils.OnCardClickUtil
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +26,10 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var savedCardsAdapter: SavedCardsAdapter
     private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var searchView: SearchView
+    private lateinit var savedCardsList: List<Card>
+    private var isShowingNoData = false
+    private var filteredList: ArrayList<Card> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +54,27 @@ class HomeFragment : Fragment() {
         onFabAddCardClick()
         savedCardsAdapter.onItemClickHandler = { onCardClick(it) }
         savedCardsAdapter.onFavIconClickHandler = { onFavIconClick(it) }
+
+        searchView = binding.homeFragmentSearchView
+        searchView.clearFocus()
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filteredList = FilterListUtil.filterList(newText, savedCardsList)
+                if(filteredList.isEmpty() && !isShowingNoData){
+                    isShowingNoData = true
+                    Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
+                }
+                if(filteredList.isNotEmpty()){
+                    isShowingNoData = false
+                }
+                savedCardsAdapter.differ.submitList(filteredList)
+                return true
+            }
+        })
     }
 
     private fun onFavIconClick(card: Card) {
@@ -110,6 +137,7 @@ class HomeFragment : Fragment() {
 
     private fun observeAllCardsLiveData(){
         mainActivityViewModel.getCards.observe(viewLifecycleOwner){
+            savedCardsList = it
             savedCardsAdapter.differ.submitList(it)
         }
     }

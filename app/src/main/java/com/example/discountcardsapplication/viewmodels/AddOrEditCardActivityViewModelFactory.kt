@@ -6,7 +6,7 @@ import com.example.discountcardsapplication.database.CardsDatabase
 
 class AddOrEditCardActivityViewModelFactory(
     private val cardsDatabase: CardsDatabase
-    ): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return AddOrEditCardActivityViewModel(cardsDatabase) as T
     }

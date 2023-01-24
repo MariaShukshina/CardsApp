@@ -7,17 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.databinding.BarcodeformatItemBinding
 import com.example.discountcardsapplication.models.GeneratedResult
 
-
 class ScannedBarcodesAdapter : RecyclerView.Adapter<ScannedBarcodesAdapter.ScannedBarcodesViewHolder>() {
     private var barcodesList = listOf<GeneratedResult>()
     lateinit var onItemClick: (GeneratedResult) -> Unit
 
-    fun setBarcodesList(barcodesList: List<GeneratedResult>){
+    fun setBarcodesList(barcodesList: List<GeneratedResult>) {
         this.barcodesList = barcodesList
         notifyDataSetChanged()
     }
 
-    class ScannedBarcodesViewHolder(binding: BarcodeformatItemBinding): RecyclerView.ViewHolder(binding.root){
+    class ScannedBarcodesViewHolder(binding: BarcodeformatItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val barcodeImage = binding.ivGeneratedBitmap
         val barcodeFormatName = binding.tvBarcodeFormatName
         val scannedInfo = binding.tvScannedInfo
@@ -27,25 +26,25 @@ class ScannedBarcodesAdapter : RecyclerView.Adapter<ScannedBarcodesAdapter.Scann
         return ScannedBarcodesViewHolder(
             BarcodeformatItemBinding.inflate(
                 LayoutInflater.from(parent.context),
-                parent, false
+                parent,
+                false
             )
         )
     }
 
     override fun onBindViewHolder(holder: ScannedBarcodesViewHolder, position: Int) {
-
         holder.barcodeImage.setImageBitmap(barcodesList[position].bitmap)
         holder.barcodeFormatName.text = barcodesList[position].barcodeFormat.toString()
         holder.scannedInfo.text = barcodesList[position].qrCode
 
-        if(barcodesList[position].isSelected == 1){
+        if (barcodesList[position].isSelected == 1) {
             holder.itemView.setBackgroundColor(Color.LTGRAY)
         } else {
             holder.itemView.setBackgroundColor(Color.WHITE)
         }
 
         holder.itemView.setOnClickListener {
-            for((index, item) in barcodesList.withIndex()) {
+            for ((index, item) in barcodesList.withIndex()) {
                 if (index == position) {
                     item.isSelected = 1
                 } else {

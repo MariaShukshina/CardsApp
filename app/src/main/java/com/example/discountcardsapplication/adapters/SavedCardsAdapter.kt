@@ -13,9 +13,8 @@ import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
 
-
-class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
-    //private var cardsList = listOf<Card>()
+class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
+    // private var cardsList = listOf<Card>()
 
     lateinit var onItemClickHandler: (Card) -> Unit
     lateinit var onFavIconClickHandler: (Card) -> Unit
@@ -25,7 +24,7 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
         notifyDataSetChanged()
     }*/
 
-    private val diffUtil = object: DiffUtil.ItemCallback<Card>(){
+    private val diffUtil = object : DiffUtil.ItemCallback<Card>() {
         override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {
             return oldItem.id == newItem.id
         }
@@ -37,7 +36,7 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
 
     val differ = AsyncListDiffer(this, diffUtil)
 
-    class SavedCardsViewHolder(binding: CardItemBinding): RecyclerView.ViewHolder(binding.root){
+    class SavedCardsViewHolder(binding: CardItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val cardImage = binding.cardImage
         val favoriteIcon = binding.favoriteIcon
     }
@@ -45,17 +44,19 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedCardsViewHolder {
         val binding = CardItemBinding.inflate(
             LayoutInflater.from(parent.context),
-            parent, false)
+            parent,
+            false
+        )
 
         val cardWidth: Int
         val cardHeight: Int
         val orientation = activity.resources.configuration.orientation
-        if(orientation == Configuration.ORIENTATION_PORTRAIT ){
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             cardWidth = parent.width - 4
-            cardHeight =  cardWidth / 2
+            cardHeight = cardWidth / 2
         } else {
             cardWidth = (parent.width - 2) / 2
-            cardHeight =  cardWidth / 2
+            cardHeight = cardWidth / 2
         }
         val layoutParams = binding.cardImage.layoutParams
         layoutParams.width = cardWidth
@@ -68,16 +69,15 @@ class SavedCardsAdapter(private val activity: MainActivity): RecyclerView.Adapte
         val card = differ.currentList[position]
         Log.i("tag", card.imageResource.toString())
 
-        if(card.isFavorite){
+        if (card.isFavorite) {
             holder.favoriteIcon.setImageResource(R.drawable.ic_favorite_selected)
         } else {
             holder.favoriteIcon.setImageResource(R.drawable.ic_favorite)
         }
 
-        if(card.customImage != null){
+        if (card.customImage != null) {
             holder.cardImage.setImageURI(card.customImage!!.toUri())
-
-        } else if(card.imageResource != null){
+        } else if (card.imageResource != null) {
             holder.cardImage.setImageResource(card.imageResource!!)
         } else {
             holder.cardImage.setImageResource(R.drawable.ic_placeholder)

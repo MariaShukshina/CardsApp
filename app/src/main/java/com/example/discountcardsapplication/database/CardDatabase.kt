@@ -8,15 +8,15 @@ import com.example.discountcardsapplication.models.Card
 
 @Database(entities = [Card::class], version = 1)
 
-abstract class CardsDatabase: RoomDatabase() {
+abstract class CardsDatabase : RoomDatabase() {
     abstract fun getCardsDao(): CardsDao
 
-    companion object{
+    companion object {
         @Volatile
         var INSTANCE: CardsDatabase? = null
 
         fun getInstance(context: Context): CardsDatabase {
-            return INSTANCE ?: synchronized(this){
+            return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context,
                     CardsDatabase::class.java,

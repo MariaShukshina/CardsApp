@@ -18,11 +18,11 @@ class ChooseBarcodeFormatCustomDialog(
     private var activity: Activity,
     private var generatedResultList: ArrayList<GeneratedResult>,
     private var onDataCollected: (GeneratedBarcodeForUserToChoose) -> Unit
-    ): Dialog(activity), View.OnClickListener {
+) : Dialog(activity), View.OnClickListener {
 
     private lateinit var scannedBarcodesAdapter: ScannedBarcodesAdapter
     private lateinit var binding: ChooseBarcodeformatCustomDialogBinding
-    private var isItemSelected =  false
+    private var isItemSelected = false
     private var barcodeFormat: BarcodeFormat? = null
     private var scannedInfo: String? = null
 
@@ -60,7 +60,7 @@ class ChooseBarcodeFormatCustomDialog(
                 dismiss()
             }
             R.id.button_done -> {
-                if(isItemSelected) {
+                if (isItemSelected) {
                     onDataCollected.invoke(GeneratedBarcodeForUserToChoose(barcodeFormat, scannedInfo))
                     dismiss()
                 } else {

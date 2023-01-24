@@ -43,18 +43,18 @@ class ChooseCompanyActivity : AppCompatActivity() {
 
         companiesSearchView = binding.companiesSearchView
         companiesSearchView.clearFocus()
-        companiesSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        companiesSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 val filteredCompaniesList = FilterListUtil.filteredCompaniesList(newText, companiesList)
-                if(filteredCompaniesList.isEmpty() && !isShowingNoData){
+                if (filteredCompaniesList.isEmpty() && !isShowingNoData) {
                     isShowingNoData = true
                     Toast.makeText(this@ChooseCompanyActivity, "No data found", Toast.LENGTH_SHORT).show()
                 }
-                if(filteredCompaniesList.isNotEmpty()){
+                if (filteredCompaniesList.isNotEmpty()) {
                     isShowingNoData = false
                 }
                 companiesAdapter.setCompaniesList(filteredCompaniesList)
@@ -83,7 +83,7 @@ class ChooseCompanyActivity : AppCompatActivity() {
             adapter = companiesAdapter
         }
     }
-    private fun setupInfoInRecyclerView(){
+    private fun setupInfoInRecyclerView() {
         companiesAdapter.setCompaniesList(companiesList)
     }
 }

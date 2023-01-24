@@ -6,7 +6,7 @@ import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.models.Card
 import kotlinx.coroutines.launch
 
-class AddOrEditCardActivityViewModel(private val cardsDatabase: CardsDatabase): ViewModel() {
+class AddOrEditCardActivityViewModel(private val cardsDatabase: CardsDatabase) : ViewModel() {
 
     fun insertCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().insertCard(card)

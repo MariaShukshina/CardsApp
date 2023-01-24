@@ -6,7 +6,7 @@ import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.models.Card
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(private val cardsDatabase: CardsDatabase): ViewModel() {
+class MainActivityViewModel(private val cardsDatabase: CardsDatabase) : ViewModel() {
 
     val getCards = cardsDatabase.getCardsDao().getAllCards()
 

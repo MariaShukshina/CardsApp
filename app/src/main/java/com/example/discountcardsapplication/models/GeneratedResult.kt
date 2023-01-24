@@ -5,13 +5,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.zxing.BarcodeFormat
 
-data class GeneratedResult (
+data class GeneratedResult(
     var errorMessage: String? = null,
     var bitmap: Bitmap? = null,
     var qrCode: String? = null,
     var barcodeFormat: BarcodeFormat? = null,
     var isSelected: Int = 0
-): Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readParcelable(Bitmap::class.java.classLoader),

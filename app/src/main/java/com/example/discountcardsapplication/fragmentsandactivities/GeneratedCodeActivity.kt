@@ -25,25 +25,25 @@ class GeneratedCodeActivity : AppCompatActivity() {
 
     private fun getGeneratedDataFromIntentAndSetInViews() {
         val intent = intent
-        if(intent.hasExtra(CODE_RESULT)){
+        if (intent.hasExtra(CODE_RESULT)) {
             val codeResult = intent.getParcelableExtra<GeneratedResult>(CODE_RESULT)
             binding.generatedImage.setImageBitmap(codeResult!!.bitmap)
             binding.tvScannedCode.text = codeResult.qrCode
         }
-        if(intent.hasExtra(CUSTOM_IMAGE)){
+        if (intent.hasExtra(CUSTOM_IMAGE)) {
             val customImage = intent.getStringExtra(CUSTOM_IMAGE)!!.toUri()
             binding.savedCardImage.setImageURI(customImage)
-        } else if(intent.hasExtra(IMAGE_RESOURCE)) {
+        } else if (intent.hasExtra(IMAGE_RESOURCE)) {
             binding.savedCardImage.setImageResource(intent.getIntExtra(IMAGE_RESOURCE, 0))
-        } else if(intent.hasExtra(DEFAULT_IMAGE)) {
+        } else if (intent.hasExtra(DEFAULT_IMAGE)) {
             binding.savedCardImage.setImageResource(R.drawable.ic_placeholder)
         }
-        if(intent.hasExtra(COMPANY_NAME)){
+        if (intent.hasExtra(COMPANY_NAME)) {
             supportActionBar?.title = intent.getStringExtra(COMPANY_NAME)
         }
     }
 
-    private fun setupSupportActionBar(){
+    private fun setupSupportActionBar() {
         setSupportActionBar(binding.savedCardToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.savedCardToolbar.setNavigationOnClickListener {

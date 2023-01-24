@@ -10,12 +10,12 @@ class CompaniesAdapter : RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHold
     private var companiesList = listOf<Company>()
     lateinit var onItemClick: (Company) -> Unit
 
-    fun setCompaniesList(companiesList: List<Company>){
+    fun setCompaniesList(companiesList: List<Company>) {
         this.companiesList = companiesList
         notifyDataSetChanged()
     }
 
-    class CompaniesViewHolder(binding: CompanyItemBinding): RecyclerView.ViewHolder(binding.root){
+    class CompaniesViewHolder(binding: CompanyItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val companyAvatar = binding.companyAvatar
         val companyName = binding.tvCompanyName
     }
@@ -24,13 +24,13 @@ class CompaniesAdapter : RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHold
         return CompaniesViewHolder(
             CompanyItemBinding.inflate(
                 LayoutInflater.from(parent.context),
-                parent, false
+                parent,
+                false
             )
         )
     }
 
     override fun onBindViewHolder(holder: CompaniesViewHolder, position: Int) {
-
         holder.companyAvatar.setImageResource(companiesList[position].image)
         holder.companyName.text = companiesList[position].name
 

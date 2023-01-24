@@ -38,7 +38,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -57,7 +58,7 @@ class HomeFragment : Fragment() {
 
         searchView = binding.homeFragmentSearchView
         searchView.clearFocus()
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -91,13 +92,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun onCardClick(card: Card) {
-            val codeResult = CodeGenerator().generateQROrBarcodeImage(card.qrOrBarCode!!, card.barcodeFormat!!)
-            if (codeResult.errorMessage != null){
-                Toast.makeText(context, codeResult.errorMessage, Toast.LENGTH_SHORT).show()
-            }else{
-                val intent = Intent(activity, GeneratedCodeActivity::class.java)
-                OnCardClickUtil.onCardClick(intent, codeResult, card)
-                startActivity(intent)
+        val codeResult = CodeGenerator().generateQROrBarcodeImage(card.qrOrBarCode!!, card.barcodeFormat!!)
+        if (codeResult.errorMessage != null) {
+            Toast.makeText(context, codeResult.errorMessage, Toast.LENGTH_SHORT).show()
+        } else {
+            val intent = Intent(activity, GeneratedCodeActivity::class.java)
+            OnCardClickUtil.onCardClick(intent, codeResult, card)
+            startActivity(intent)
         }
     }
 
@@ -110,19 +111,26 @@ class HomeFragment : Fragment() {
     private fun prepareCardsRecyclerView() {
         val orientation = this.resources.configuration.orientation
         binding.rvSavedCardsList.apply {
-            if(orientation == Configuration.ORIENTATION_PORTRAIT){
-                layoutManager = LinearLayoutManager(context,
-                    LinearLayoutManager.VERTICAL, false)
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
             } else {
-                layoutManager = GridLayoutManager(context, 2,
-                    GridLayoutManager.VERTICAL, false)
+                layoutManager = GridLayoutManager(
+                    context,
+                    2,
+                    GridLayoutManager.VERTICAL,
+                    false
+                )
             }
             adapter = savedCardsAdapter
         }
-        val itemTouchHelper = object: ItemTouchHelper.SimpleCallback(
+        val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ){
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -143,8 +151,8 @@ class HomeFragment : Fragment() {
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvSavedCardsList)
     }
 
-    private fun observeAllCardsLiveData(){
-        mainActivityViewModel.getCards.observe(viewLifecycleOwner){
+    private fun observeAllCardsLiveData() {
+        mainActivityViewModel.getCards.observe(viewLifecycleOwner) {
             savedCardsList = it
             savedCardsAdapter.differ.submitList(filterSavedCards(searchText, savedCardsList))
         }

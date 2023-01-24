@@ -35,7 +35,8 @@ class FavoritesFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
@@ -86,12 +87,15 @@ class FavoritesFragment : Fragment() {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 layoutManager = LinearLayoutManager(
                     context,
-                    LinearLayoutManager.VERTICAL, false
+                    LinearLayoutManager.VERTICAL,
+                    false
                 )
             } else {
                 layoutManager = GridLayoutManager(
-                    context, 2,
-                    GridLayoutManager.VERTICAL, false
+                    context,
+                    2,
+                    GridLayoutManager.VERTICAL,
+                    false
                 )
             }
             adapter = savedCardsAdapter

@@ -21,7 +21,7 @@ class CodeGenerator {
         val result = GeneratedResult()
 
         if (inputText.length < 12 || inputText.length > 13) {
-            result.errorMessage ="The correct number of digits is 13."
+            result.errorMessage = "The correct number of digits is 13."
             return result
         }
 
@@ -39,14 +39,15 @@ class CodeGenerator {
         try {
             val bitMatrix: BitMatrix = multiFormatWriter.encode(
                 inputText,
-                barcodeFormat, 200, height
+                barcodeFormat,
+                200,
+                height
             )
             val barCodeEncoder = BarcodeEncoder()
             val bitmap: Bitmap = barCodeEncoder.createBitmap(bitMatrix)
             result.bitmap = bitmap
             result.qrCode = inputText
             result.barcodeFormat = barcodeFormat
-
         } catch (e: Exception) {
             e.printStackTrace()
             result.errorMessage = "Please check the number on the card."

@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -259,7 +260,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     customImage = saveImageToInternalStorage(selectedImageBitmap)
 
                     Log.i("Saved image: ", "Path :: $customImage")
-
+                    binding.newCardImage.scaleType = ImageView.ScaleType.CENTER_CROP
                     binding.newCardImage.setImageBitmap(selectedImageBitmap)
                 } catch (e: IOException) {
                     e.printStackTrace()

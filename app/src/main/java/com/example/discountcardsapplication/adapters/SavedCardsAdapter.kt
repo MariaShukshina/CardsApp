@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -70,6 +71,7 @@ class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapt
         }
 
         if (card.customImage != null) {
+            holder.cardImage.scaleType = ImageView.ScaleType.CENTER_CROP
             holder.cardImage.setImageURI(card.customImage!!.toUri())
         } else if (card.imageResource != null) {
             holder.cardImage.setImageResource(card.imageResource!!)

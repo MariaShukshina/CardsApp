@@ -249,27 +249,25 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     Log.i("AddOrEditCardActivity", barcodeFormat.toString())
                 }
                 setupButtonDoneColor()
-            } else if (requestCode == GALLERY_INTENT) {
-                if (data != null) {
-                    val contentURI = data.data
-                    try {
-                        val selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            contentURI
-                        )
-                        customImage = saveImageToInternalStorage(selectedImageBitmap)
+            } else if (requestCode == GALLERY_INTENT && data != null) {
+                val contentURI = data.data
+                try {
+                    val selectedImageBitmap = MediaStore.Images.Media.getBitmap(
+                        this.contentResolver,
+                        contentURI
+                    )
+                    customImage = saveImageToInternalStorage(selectedImageBitmap)
 
-                        Log.i("Saved image: ", "Path :: $customImage")
+                    Log.i("Saved image: ", "Path :: $customImage")
 
-                        binding.newCardImage.setImageBitmap(selectedImageBitmap)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                        Toast.makeText(
-                            this@AddOrEditCardActivity,
-                            "Failed to load image from Gallery.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    binding.newCardImage.setImageBitmap(selectedImageBitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(
+                        this@AddOrEditCardActivity,
+                        "Failed to load image from Gallery.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

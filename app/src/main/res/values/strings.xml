@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">DiscountCardsApplication</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="other_discount_card">Other discount card</string>
+    <string name="add_a_card">Add a card</string>
+    <string name="list_of_cards">List of cards</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="choose_your_photo">Choose your photo</string>
+    <string name="company_name">Company name</string>
+    <string name="card_number">Card number</string>
+    <string name="scan_icon">Scan icon</string>
+    <string name="description">Description</string>
+    <string name="saved_card">Saved card</string>
+    <string name="choose_code_format">Choose code format</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="done_button">Done</string>
+    <string name="scanned_barcode_image">Scanned barcode image</string>
+    <string name="add_new_card_button">Add new card button</string>
+    <string name="company_avatar">Company avatar</string>
+    <string name="description_text_field">Description text field</string>
+    <string name="card_image">Card image</string>
+    <string name="favorite_icon">Favorite icon</string>
 </resources>

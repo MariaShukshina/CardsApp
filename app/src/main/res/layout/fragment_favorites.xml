@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentsandactivities.FavoritesFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSearchFavCards"
+        android:background="@color/teal_200"
+        android:layout_width="match_parent"
+        android:theme="@style/CustomToolbarStyle"
+        android:layout_height="?attr/actionBarSize"
+        >
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/fav_cards_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavCards"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarSearchFavCards"
+        android:layout_margin="4dp"
+        android:contentDescription="@string/list_of_cards"
+        tools:listitem="@layout/card_item"/>
+
+</RelativeLayout>

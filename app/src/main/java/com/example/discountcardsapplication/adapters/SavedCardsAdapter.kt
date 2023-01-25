@@ -14,15 +14,9 @@ import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
 
 class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
-    // private var cardsList = listOf<Card>()
 
     lateinit var onItemClickHandler: (Card) -> Unit
     lateinit var onFavIconClickHandler: (Card) -> Unit
-
-   /* fun setSavedCardsList(cardsList: List<Card>){
-        this.cardsList = cardsList
-        notifyDataSetChanged()
-    }*/
 
     private val diffUtil = object : DiffUtil.ItemCallback<Card>() {
         override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {

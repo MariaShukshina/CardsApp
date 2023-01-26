@@ -8,8 +8,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.adapters.CompaniesAdapter
 import com.example.discountcardsapplication.databinding.ActivityChooseCompanyBinding
+import com.example.discountcardsapplication.models.CompaniesList
 import com.example.discountcardsapplication.models.Company
-import com.example.discountcardsapplication.models.Constants
 import com.example.discountcardsapplication.utils.FilterListUtil
 
 class ChooseCompanyActivity : AppCompatActivity() {
@@ -35,7 +35,7 @@ class ChooseCompanyActivity : AppCompatActivity() {
             onBackPressed()
         }
         companiesAdapter = CompaniesAdapter()
-        companiesList = Constants.makeShopList()
+        companiesList = CompaniesList.makeCompaniesList()
 
         binding.fabAddCard.setOnClickListener {
             startActivity(Intent(this, AddCardActivity::class.java))

@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'io.gitlab.arturbosch.detekt' version '1.22.0'
+    id "io.gitlab.arturbosch.detekt" version "$detektVersion"
 }
 
 android {
@@ -32,6 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = true
+    autoCorrect = true
+    config = files("$projectDir/configs/detekt/config.yml")
+    baseline = file("$projectDir/configs/detekt/baseline.xml")
+    source = files("src/main/java", "src/main/kotlin")
+    basePath = projectDir
 }
 
 dependencies {
@@ -79,4 +89,7 @@ dependencies {
 
     debugImplementation 'im.dino:dbinspector:4.0.0'
 
+    //Detekt
+    detekt "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
 }

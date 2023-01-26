@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
-import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
@@ -23,7 +22,8 @@ class CodeGenerator {
         val result = GeneratedResult()
 
         if (inputText.length < REQUIRED_NUMBER_OF_DIGITS_TO_GENERATE ||
-            inputText.length > EAN13_NUMBER_OF_DIGITS) {
+            inputText.length > EAN13_NUMBER_OF_DIGITS
+        ) {
             result.errorMessage = "The correct number of digits is 13."
             return result
         }

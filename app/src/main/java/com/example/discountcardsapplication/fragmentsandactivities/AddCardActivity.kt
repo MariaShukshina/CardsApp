@@ -3,7 +3,11 @@ package com.example.discountcardsapplication.fragmentsandactivities
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -32,8 +36,8 @@ import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActiv
 import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.example.discountcardsapplication.utils.CodeGenerator
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModel
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModelFactory
+import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
+import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModelFactory
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -66,10 +70,10 @@ class AddCardActivity : AppCompatActivity() {
             handleGalleryActivityData(result)
         }
 
-    private val viewModel: AddOrEditCardActivityViewModel by lazy {
+    private val viewModel: AddCardActivityViewModel by lazy {
         val cardsDatabase = CardsDatabase.getInstance(this)
-        val factory = AddOrEditCardActivityViewModelFactory(cardsDatabase)
-        ViewModelProvider(this, factory)[AddOrEditCardActivityViewModel::class.java]
+        val factory = AddCardActivityViewModelFactory(cardsDatabase)
+        ViewModelProvider(this, factory)[AddCardActivityViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -189,7 +193,7 @@ class AddCardActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "Please scan your card or enter " +
-                            "a card number manually.",
+                        "a card number manually.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -318,7 +322,7 @@ class AddCardActivity : AppCompatActivity() {
     private fun showRationaleDialogForPermissions(permissionToken: PermissionToken?) {
         AlertDialog.Builder(this).setMessage(
             "Permission required for this feature is denied. " +
-                    "It can be enabled in the application settings."
+                "It can be enabled in the application settings."
         )
             .setPositiveButton("Enable permission") { _, _ ->
                 if (permissionToken != null) {
@@ -365,7 +369,6 @@ class AddCardActivity : AppCompatActivity() {
         ).withListener(object : BasePermissionListener() {
             override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                 if (response != null) {
-
                     val galleryIntent = Intent(
                         Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI

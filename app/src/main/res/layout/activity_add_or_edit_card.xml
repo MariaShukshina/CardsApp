@@ -55,7 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_company_name"
+        android:id="@+id/tilCompanyName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         app:boxCornerRadiusBottomEnd="8dp"
@@ -71,7 +71,7 @@
         app:hintTextColor="@color/teal_700">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_company_name"
+            android:id="@+id/etCompanyName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/company_name"
@@ -84,13 +84,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
-        android:id="@+id/card_number_ll"
+        android:id="@+id/cardNumberLl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/til_company_name">
+        app:layout_constraintTop_toBottomOf="@id/tilCompanyName">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_card_number"
+            android:id="@+id/tilCardNumber"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_weight="4"
@@ -107,7 +107,7 @@
             app:hintTextColor="@color/teal_700">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_card_number"
+                android:id="@+id/etCardNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/card_number"
@@ -120,7 +120,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
-            android:id="@+id/scan_icon"
+            android:id="@+id/scanIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"

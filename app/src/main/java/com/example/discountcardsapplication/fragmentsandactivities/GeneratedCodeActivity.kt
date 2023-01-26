@@ -6,11 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.ActivityGeneratedCodeBinding
-import com.example.discountcardsapplication.fragmentsandactivities.HomeFragment.Companion.CODE_RESULT
-import com.example.discountcardsapplication.fragmentsandactivities.HomeFragment.Companion.COMPANY_NAME
-import com.example.discountcardsapplication.fragmentsandactivities.HomeFragment.Companion.CUSTOM_IMAGE
-import com.example.discountcardsapplication.fragmentsandactivities.HomeFragment.Companion.DEFAULT_IMAGE
-import com.example.discountcardsapplication.fragmentsandactivities.HomeFragment.Companion.IMAGE_RESOURCE
 import com.example.discountcardsapplication.models.GeneratedResult
 
 class GeneratedCodeActivity : AppCompatActivity() {
@@ -51,5 +46,12 @@ class GeneratedCodeActivity : AppCompatActivity() {
         binding.savedCardToolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+    }
+    companion object {
+        const val CODE_RESULT = "CODE_RESULT"
+        const val CUSTOM_IMAGE = "CUSTOM_IMAGE"
+        const val IMAGE_RESOURCE = "IMAGE_RESOURCE"
+        const val DEFAULT_IMAGE = "DEFAULT_IMAGE"
+        const val COMPANY_NAME = "COMPANY_NAME"
     }
 }

@@ -19,11 +19,6 @@ class ChooseCompanyActivity : AppCompatActivity() {
     private lateinit var companiesSearchView: SearchView
     private var isShowingNoData = false
 
-    companion object {
-        const val COMPANY_NAME = "COMPANY_NAME"
-        const val COMPANY_IMAGE = "COMPANY_IMAGE"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChooseCompanyBinding.inflate(layoutInflater)
@@ -85,5 +80,10 @@ class ChooseCompanyActivity : AppCompatActivity() {
     }
     private fun setupInfoInRecyclerView() {
         companiesAdapter.setCompaniesList(companiesList)
+    }
+
+    companion object {
+        const val COMPANY_NAME = "COMPANY_NAME"
+        const val COMPANY_IMAGE = "COMPANY_IMAGE"
     }
 }

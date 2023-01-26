@@ -3,6 +3,7 @@ package com.example.discountcardsapplication.fragmentsandactivities
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,10 +95,11 @@ class HomeFragment : Fragment() {
     private fun onCardClick(card: Card) {
         val codeResult = CodeGenerator().generateQROrBarcodeImage(card.qrOrBarCode!!, card.barcodeFormat!!)
         if (codeResult.errorMessage != null) {
+            Log.e(LOG_TAG, "Code image is not generated. Error: ${codeResult.errorMessage}")
             Toast.makeText(context, codeResult.errorMessage, Toast.LENGTH_SHORT).show()
         } else {
             val intent = Intent(activity, GeneratedCodeActivity::class.java)
-            OnCardClickUtil.onCardClick(intent, codeResult, card)
+            OnCardClickUtil.addCardDataToIntent(intent, codeResult, card)
             startActivity(intent)
         }
     }
@@ -158,10 +160,6 @@ class HomeFragment : Fragment() {
         }
     }
     companion object {
-        const val CODE_RESULT = "CODE_RESULT"
-        const val CUSTOM_IMAGE = "CUSTOM_IMAGE"
-        const val IMAGE_RESOURCE = "IMAGE_RESOURCE"
-        const val DEFAULT_IMAGE = "DEFAULT_IMAGE"
-        const val COMPANY_NAME = "COMPANY_NAME"
+        private const val LOG_TAG = "HomeFragment"
     }
 }

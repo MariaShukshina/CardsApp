@@ -126,7 +126,7 @@ class FavoritesFragment : Fragment() {
             Toast.makeText(context, codeResult.errorMessage, Toast.LENGTH_SHORT).show()
         } else {
             val intent = Intent(activity, GeneratedCodeActivity::class.java)
-            OnCardClickUtil.onCardClick(intent, codeResult, card)
+            OnCardClickUtil.addCardDataToIntent(intent, codeResult, card)
             startActivity(intent)
         }
     }

@@ -56,10 +56,10 @@ class ChooseBarcodeFormatCustomDialog(
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.button_cancel -> {
+            R.id.buttonCancel -> {
                 dismiss()
             }
-            R.id.button_done -> {
+            R.id.buttonDone -> {
                 if (isItemSelected) {
                     onDataCollected.invoke(GeneratedBarcodeForUserToChoose(barcodeFormat, scannedInfo))
                     dismiss()

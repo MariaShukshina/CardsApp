@@ -11,8 +11,4 @@ class AddCardActivityViewModel(private val cardsDatabase: CardsDatabase) : ViewM
     fun insertCard(card: Card) = viewModelScope.launch {
         cardsDatabase.getCardsDao().insertCard(card)
     }
-
-    fun updateCard(card: Card) = viewModelScope.launch {
-        cardsDatabase.getCardsDao().updateCard(card)
-    }
 }

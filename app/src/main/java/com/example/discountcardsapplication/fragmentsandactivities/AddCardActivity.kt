@@ -3,16 +3,25 @@ package com.example.discountcardsapplication.fragmentsandactivities
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -27,8 +36,8 @@ import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActiv
 import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.example.discountcardsapplication.utils.CodeGenerator
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModel
-import com.example.discountcardsapplication.viewmodels.AddOrEditCardActivityViewModelFactory
+import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
+import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModelFactory
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -41,7 +50,7 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 
-class AddOrEditCardActivity : AppCompatActivity() {
+class AddCardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddOrEditCardBinding
     private var companyName: String = ""
     private var imageResource: Int = 0
@@ -52,17 +61,27 @@ class AddOrEditCardActivity : AppCompatActivity() {
     private lateinit var mSharedPreferences: SharedPreferences
     private var isReadExternalStoragePermissionRequested = false
 
-    private val viewModel: AddOrEditCardActivityViewModel by lazy {
+    private val startScanActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            handleScannedData(result)
+        }
+    private val startGalleryActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            handleGalleryActivityData(result)
+        }
+
+    private val viewModel: AddCardActivityViewModel by lazy {
         val cardsDatabase = CardsDatabase.getInstance(this)
-        val factory = AddOrEditCardActivityViewModelFactory(cardsDatabase)
-        ViewModelProvider(this, factory)[AddOrEditCardActivityViewModel::class.java]
+        val factory = AddCardActivityViewModelFactory(cardsDatabase)
+        ViewModelProvider(this, factory)[AddCardActivityViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mSharedPreferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-        isCameraPermissionRequested = mSharedPreferences.getBoolean(IS_CAMERA_PERMISSION_CHECKED, false)
+        isCameraPermissionRequested =
+            mSharedPreferences.getBoolean(IS_CAMERA_PERMISSION_CHECKED, false)
         isReadExternalStoragePermissionRequested = mSharedPreferences.getBoolean(
             IS_EXTERNAL_STORAGE_PERMISSION_CHECKED,
             false
@@ -94,8 +113,56 @@ class AddOrEditCardActivity : AppCompatActivity() {
         tryToHideChooseFromGalleryButton()
     }
 
+    private fun handleScannedData(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            if (intent != null) {
+                barcodeFormat = intent.getSerializableExtra(BARCODE_FORMAT) as BarcodeFormat
+                code = intent.getStringExtra(CODE)!!
+                binding.etCardNumber.setText(code)
+                binding.etCardNumber.isFocusableInTouchMode = false
+                Log.i("AddOrEditCardActivity", barcodeFormat.toString())
+            }
+            setupButtonDoneColor()
+        }
+    }
+
+    private fun handleGalleryActivityData(result: ActivityResult) {
+        if (result.resultCode != Activity.RESULT_OK) return
+        val intent = result.data ?: return
+        try {
+            val selectedImageBitmap: Bitmap =
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    @Suppress("DEPRECATION")
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, intent.data)
+                } else {
+                    ImageDecoder.decodeBitmap(
+                        ImageDecoder.createSource(
+                            this.contentResolver,
+                            intent.data!!
+                        )
+                    )
+                }
+            customImage = saveImageToInternalStorage(selectedImageBitmap)
+
+            Log.i("Saved image: ", "Path :: $customImage")
+            binding.newCardImage.scaleType = ImageView.ScaleType.CENTER_CROP
+            binding.newCardImage.setImageBitmap(selectedImageBitmap)
+        } catch (e: IOException) {
+            Log.e(LOG_TAG, e.toString())
+            Toast.makeText(
+                this@AddCardActivity,
+                "Failed to load image from Gallery.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
     private fun tryToHideScanButton() {
-        if (ContextCompat.checkSelfPermission(this@AddOrEditCardActivity, Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(
+                this@AddCardActivity,
+                Manifest.permission.CAMERA
+            )
             == PackageManager.PERMISSION_DENIED && isCameraPermissionRequested
         ) {
             binding.scanIcon.visibility = View.GONE
@@ -103,7 +170,10 @@ class AddOrEditCardActivity : AppCompatActivity() {
     }
 
     private fun tryToHideChooseFromGalleryButton() {
-        if (ContextCompat.checkSelfPermission(this@AddOrEditCardActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(
+                this@AddCardActivity,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
             == PackageManager.PERMISSION_DENIED && isReadExternalStoragePermissionRequested
         ) {
             binding.buttonLoadYourPhoto.visibility = View.GONE
@@ -141,6 +211,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
         val barcodeFormatsList = listOf(
             BarcodeFormat.CODE_39,
@@ -160,29 +231,30 @@ class AddOrEditCardActivity : AppCompatActivity() {
             }
         }
         if (generatedResultsList.isNotEmpty()) {
-            val chooseBarcodeFormatCustomDialog = ChooseBarcodeFormatCustomDialog(this, generatedResultsList) {
-                barcodeFormat = it.barcodeFormat
-                code = it.code
-                val card = Card(
-                    id = 0,
-                    companyName = binding.etCompanyName.text.toString(),
-                    barcodeFormat = barcodeFormat,
-                    qrOrBarCode = code
-                )
-                if (customImage != null) {
-                    card.customImage = customImage.toString()
-                } else if (imageResource != 0) {
-                    card.imageResource = imageResource
-                } else {
-                    card.imageResource = R.drawable.ic_placeholder
+            val chooseBarcodeFormatCustomDialog =
+                ChooseBarcodeFormatCustomDialog(this, generatedResultsList) {
+                    barcodeFormat = it.barcodeFormat
+                    code = it.code
+                    val card = Card(
+                        id = 0,
+                        companyName = binding.etCompanyName.text.toString(),
+                        barcodeFormat = barcodeFormat,
+                        qrOrBarCode = code
+                    )
+                    if (customImage != null) {
+                        card.customImage = customImage.toString()
+                    } else if (imageResource != 0) {
+                        card.imageResource = imageResource
+                    } else {
+                        card.imageResource = R.drawable.ic_placeholder
+                    }
+                    createdCardHandler.invoke(card)
                 }
-                createdCardHandler.invoke(card)
-            }
             chooseBarcodeFormatCustomDialog.show()
             chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
         } else {
             Toast.makeText(
-                this@AddOrEditCardActivity,
+                this@AddCardActivity,
                 "Please check the code you've entered.",
                 Toast.LENGTH_SHORT
             ).show()
@@ -207,20 +279,20 @@ class AddOrEditCardActivity : AppCompatActivity() {
     }
 
     private fun openScanActivity() {
-        Dexter.withContext(this@AddOrEditCardActivity)
+        Dexter.withContext(this@AddCardActivity)
             .withPermission(Manifest.permission.CAMERA)
             .withListener(object : BasePermissionListener() {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                     if (response != null) {
-                        startActivityForResult(
+                        startScanActivityForResult.launch(
                             Intent(
-                                this@AddOrEditCardActivity,
+                                this@AddCardActivity,
                                 ScanCardActivity::class.java
-                            ),
-                            SCAN_CODE_REQUEST_CODE
+                            )
                         )
                     }
                 }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permissionRequest: PermissionRequest?,
                     permissionToken: PermissionToken?
@@ -234,45 +306,6 @@ class AddOrEditCardActivity : AppCompatActivity() {
                     tryToHideScanButton()
                 }
             }).onSameThread().check()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SCAN_CODE_REQUEST_CODE) {
-                if (data != null) {
-                    barcodeFormat = data.getSerializableExtra(BARCODE_FORMAT) as BarcodeFormat
-                    code = data.getStringExtra(CODE)!!
-                    binding.etCardNumber.setText(code)
-                    binding.etCardNumber.isFocusableInTouchMode = false
-                    Log.i("AddOrEditCardActivity", barcodeFormat.toString())
-                }
-                setupButtonDoneColor()
-            } else if (requestCode == GALLERY_INTENT) {
-                if (data != null) {
-                    val contentURI = data.data
-                    try {
-                        val selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            contentURI
-                        )
-                        customImage = saveImageToInternalStorage(selectedImageBitmap)
-
-                        Log.i("Saved image: ", "Path :: $customImage")
-
-                        binding.newCardImage.setImageBitmap(selectedImageBitmap)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                        Toast.makeText(
-                            this@AddOrEditCardActivity,
-                            "Failed to load image from Gallery.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
     }
 
     private fun getDataFromIntentAndSetInViews() {
@@ -291,8 +324,7 @@ class AddOrEditCardActivity : AppCompatActivity() {
             "Permission required for this feature is denied. " +
                 "It can be enabled in the application settings."
         )
-            .setPositiveButton("Enable permission") {
-                    _, _ ->
+            .setPositiveButton("Enable permission") { _, _ ->
                 if (permissionToken != null) {
                     permissionToken.continuePermissionRequest()
                 } else {
@@ -302,11 +334,10 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         intent.data = uri
                         startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
-                        e.printStackTrace()
+                        Log.e(LOG_TAG, e.toString())
                     }
                 }
-            }.setNegativeButton("Cancel") {
-                    dialog, _ ->
+            }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
                 permissionToken?.continuePermissionRequest()
             }.show()
@@ -316,14 +347,24 @@ class AddOrEditCardActivity : AppCompatActivity() {
         if (binding.etCompanyName.text!!.isNotEmpty() &&
             binding.etCardNumber.text!!.isNotEmpty() && barcodeFormat != null
         ) {
-            binding.createCardButtonDone.setBackgroundColor(resources.getColor(R.color.light_salmon))
+            binding.createCardButtonDone.setBackgroundColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.light_salmon
+                )
+            )
         } else {
-            binding.createCardButtonDone.setBackgroundColor(resources.getColor(R.color.teal_700))
+            binding.createCardButtonDone.setBackgroundColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.teal_700
+                )
+            )
         }
     }
 
     private fun choosePhotoFromGallery() {
-        Dexter.withContext(this@AddOrEditCardActivity).withPermission(
+        Dexter.withContext(this@AddCardActivity).withPermission(
             Manifest.permission.READ_EXTERNAL_STORAGE
         ).withListener(object : BasePermissionListener() {
             override fun onPermissionGranted(response: PermissionGrantedResponse?) {
@@ -332,9 +373,10 @@ class AddOrEditCardActivity : AppCompatActivity() {
                         Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                     )
-                    startActivityForResult(galleryIntent, GALLERY_INTENT)
+                    startGalleryActivityForResult.launch(galleryIntent)
                 }
             }
+
             override fun onPermissionRationaleShouldBeShown(
                 permissionRequest: PermissionRequest?,
                 permissionToken: PermissionToken?
@@ -357,21 +399,22 @@ class AddOrEditCardActivity : AppCompatActivity() {
 
         try {
             val stream: OutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, stream)
             stream.flush()
             stream.close()
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e(LOG_TAG, e.toString())
         }
         return Uri.parse(file.absolutePath)
     }
 
     companion object {
-        private const val SCAN_CODE_REQUEST_CODE = 1
+        private const val BITMAP_QUALITY = 100
         private const val IMAGE_DIRECTORY = "DiscountCardsImages"
-        private const val GALLERY_INTENT = 2
         private const val PREFERENCE_NAME = "PermissionCheck"
         private const val IS_CAMERA_PERMISSION_CHECKED = "IS_CAMERA_PERMISSION_CHECKED"
-        private const val IS_EXTERNAL_STORAGE_PERMISSION_CHECKED = "IS_EXTERNAL_STORAGE_PERMISSION_CHECKED"
+        private const val IS_EXTERNAL_STORAGE_PERMISSION_CHECKED =
+            "IS_EXTERNAL_STORAGE_PERMISSION_CHECKED"
+        private const val LOG_TAG = "AddOrEditCardActivity"
     }
 }

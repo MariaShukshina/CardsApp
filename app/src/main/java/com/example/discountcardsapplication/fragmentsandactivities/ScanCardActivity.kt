@@ -1,11 +1,14 @@
 package com.example.discountcardsapplication.fragmentsandactivities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.budiyev.android.codescanner.*
+import com.budiyev.android.codescanner.AutoFocusMode
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.DecodeCallback
+import com.budiyev.android.codescanner.ErrorCallback
+import com.budiyev.android.codescanner.ScanMode
 import com.example.discountcardsapplication.databinding.ActivityScanCardBinding
 import com.google.zxing.BarcodeFormat
 
@@ -42,7 +45,7 @@ class ScanCardActivity : AppCompatActivity() {
                 val intent = Intent()
                 intent.putExtra(CODE, it.text)
                 intent.putExtra(BARCODE_FORMAT, it.barcodeFormat)
-                setResult(Activity.RESULT_OK, intent)
+                setResult(RESULT_OK, intent)
                 finish()
             }
         }

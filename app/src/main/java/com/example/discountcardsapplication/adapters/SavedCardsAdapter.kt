@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +14,8 @@ import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
 import com.example.discountcardsapplication.models.Card
 
-class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
+class SavedCardsAdapter(private val activity: MainActivity) :
+    RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {
 
     lateinit var onItemClickHandler: (Card) -> Unit
     lateinit var onFavIconClickHandler: (Card) -> Unit
@@ -46,10 +48,10 @@ class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapt
         val cardHeight: Int
         val orientation = activity.resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            cardWidth = parent.width - 4
+            cardWidth = parent.width - PORTRAIT_CARD_WIDTH_MARGIN
             cardHeight = cardWidth / 2
         } else {
-            cardWidth = (parent.width - 2) / 2
+            cardWidth = (parent.width - LANDSCAPE_CARD_WIDTH_MARGIN) / 2
             cardHeight = cardWidth / 2
         }
         val layoutParams = binding.cardImage.layoutParams
@@ -70,6 +72,7 @@ class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapt
         }
 
         if (card.customImage != null) {
+            holder.cardImage.scaleType = ImageView.ScaleType.CENTER_CROP
             holder.cardImage.setImageURI(card.customImage!!.toUri())
         } else if (card.imageResource != null) {
             holder.cardImage.setImageResource(card.imageResource!!)
@@ -88,5 +91,10 @@ class SavedCardsAdapter(private val activity: MainActivity) : RecyclerView.Adapt
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    companion object {
+        private const val PORTRAIT_CARD_WIDTH_MARGIN = 4
+        private const val LANDSCAPE_CARD_WIDTH_MARGIN = 2
     }
 }

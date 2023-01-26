@@ -1,6 +1,7 @@
 package com.example.discountcardsapplication.fragmentsandactivities
 
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.example.discountcardsapplication.R
@@ -32,6 +33,7 @@ class GeneratedCodeActivity : AppCompatActivity() {
         }
         if (intent.hasExtra(CUSTOM_IMAGE)) {
             val customImage = intent.getStringExtra(CUSTOM_IMAGE)!!.toUri()
+            binding.savedCardImage.scaleType = ImageView.ScaleType.CENTER_CROP
             binding.savedCardImage.setImageURI(customImage)
         } else if (intent.hasExtra(IMAGE_RESOURCE)) {
             binding.savedCardImage.setImageResource(intent.getIntExtra(IMAGE_RESOURCE, 0))

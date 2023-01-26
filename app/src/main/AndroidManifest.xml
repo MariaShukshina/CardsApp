@@ -35,7 +35,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".fragmentsandactivities.AddOrEditCardActivity"
+            android:name=".fragmentsandactivities.AddCardActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

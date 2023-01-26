@@ -38,7 +38,7 @@ class ChooseCompanyActivity : AppCompatActivity() {
         companiesList = Constants.makeShopList()
 
         binding.fabAddCard.setOnClickListener {
-            startActivity(Intent(this, AddOrEditCardActivity::class.java))
+            startActivity(Intent(this, AddCardActivity::class.java))
         }
 
         companiesSearchView = binding.companiesSearchView
@@ -70,7 +70,7 @@ class ChooseCompanyActivity : AppCompatActivity() {
 
     private fun onCompanyClick() {
         companiesAdapter.onItemClick = {
-            val intent = Intent(this, AddOrEditCardActivity::class.java)
+            val intent = Intent(this, AddCardActivity::class.java)
             intent.putExtra(COMPANY_NAME, it.name)
             intent.putExtra(COMPANY_IMAGE, it.image)
             startActivity(intent)

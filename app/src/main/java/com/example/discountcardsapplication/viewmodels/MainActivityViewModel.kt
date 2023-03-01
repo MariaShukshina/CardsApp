@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.models.Card
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainActivityViewModel(private val cardsDatabase: CardsDatabase) : ViewModel() {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(private val cardsDatabase: CardsDatabase) : ViewModel() {
 
     val getCards = cardsDatabase.getCardsDao().getAllCards()
 

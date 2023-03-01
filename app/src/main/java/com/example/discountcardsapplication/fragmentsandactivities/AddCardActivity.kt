@@ -22,12 +22,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import com.example.discountcardsapplication.R
-import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
@@ -37,19 +36,20 @@ import com.example.discountcardsapplication.models.Card
 import com.example.discountcardsapplication.models.GeneratedResult
 import com.example.discountcardsapplication.utils.CodeGenerator
 import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
-import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModelFactory
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.BasePermissionListener
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 
+@AndroidEntryPoint
 class AddCardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddOrEditCardBinding
     private var companyName: String = ""
@@ -61,6 +61,8 @@ class AddCardActivity : AppCompatActivity() {
     private lateinit var mSharedPreferences: SharedPreferences
     private var isReadExternalStoragePermissionRequested = false
 
+    private val addCardActivityViewModel by viewModels<AddCardActivityViewModel>()
+
     private val startScanActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             handleScannedData(result)
@@ -69,12 +71,6 @@ class AddCardActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             handleGalleryActivityData(result)
         }
-
-    private val viewModel: AddCardActivityViewModel by lazy {
-        val cardsDatabase = CardsDatabase.getInstance(this)
-        val factory = AddCardActivityViewModelFactory(cardsDatabase)
-        ViewModelProvider(this, factory)[AddCardActivityViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -200,11 +196,11 @@ class AddCardActivity : AppCompatActivity() {
             else -> {
                 if (barcodeFormat != null && code != null) {
                     val card = createAutomaticScannedCard()
-                    viewModel.insertCard(card)
+                    addCardActivityViewModel.insertCard(card)
                     finish()
                 } else {
                     createCardManually {
-                        viewModel.insertCard(it)
+                        addCardActivityViewModel.insertCard(it)
                         finish()
                     }
                 }

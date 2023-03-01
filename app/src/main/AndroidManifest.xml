@@ -10,6 +10,7 @@
         android:required="false" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:usesCleartextTraffic="false"
         android:dataExtractionRules="@xml/data_extraction_rules"

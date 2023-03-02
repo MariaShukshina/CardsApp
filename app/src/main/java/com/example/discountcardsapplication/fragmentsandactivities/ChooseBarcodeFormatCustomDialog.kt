@@ -35,15 +35,19 @@ class ChooseBarcodeFormatCustomDialog(
         scannedBarcodesAdapter = ScannedBarcodesAdapter()
         scannedBarcodesAdapter.setBarcodesList(generatedResultList)
 
-        val recyclerView = binding.rvFormats
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = scannedBarcodesAdapter
+        prepareRecyclerView()
 
         onItemClick()
 
         binding.buttonCancel.setOnClickListener(this)
         binding.buttonDone.setOnClickListener(this)
+    }
+
+    private fun prepareRecyclerView() {
+        binding.rvFormats.apply {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            adapter = scannedBarcodesAdapter
+        }
     }
 
     private fun onItemClick() {

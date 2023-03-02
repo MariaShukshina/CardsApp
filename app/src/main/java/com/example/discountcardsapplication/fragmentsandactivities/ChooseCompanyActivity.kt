@@ -8,9 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.adapters.CompaniesAdapter
 import com.example.discountcardsapplication.databinding.ActivityChooseCompanyBinding
-import com.example.discountcardsapplication.models.CompaniesList
-import com.example.discountcardsapplication.models.Company
-import com.example.discountcardsapplication.utils.FilterListUtil
+import com.example.discountcardsapplication.domain.models.CompaniesList
+import com.example.discountcardsapplication.domain.models.Company
+import com.example.discountcardsapplication.domain.utils.FilterListUtil
 
 class ChooseCompanyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseCompanyBinding

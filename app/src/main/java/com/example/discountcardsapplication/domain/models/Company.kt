@@ -1,4 +1,4 @@
-package com.example.discountcardsapplication.models
+package com.example.discountcardsapplication.domain.models
 
 data class Company(
     val name: String,

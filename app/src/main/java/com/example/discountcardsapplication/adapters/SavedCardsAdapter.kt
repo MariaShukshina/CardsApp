@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.CardItemBinding
 import com.example.discountcardsapplication.fragmentsandactivities.MainActivity
-import com.example.discountcardsapplication.models.Card
+import com.example.discountcardsapplication.domain.models.Card
 
 class SavedCardsAdapter(private val activity: MainActivity) :
     RecyclerView.Adapter<SavedCardsAdapter.SavedCardsViewHolder>() {

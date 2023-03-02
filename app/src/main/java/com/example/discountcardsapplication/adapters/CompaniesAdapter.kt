@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.databinding.CompanyItemBinding
-import com.example.discountcardsapplication.models.Company
+import com.example.discountcardsapplication.domain.models.Company
 
 class CompaniesAdapter : RecyclerView.Adapter<CompaniesAdapter.CompaniesViewHolder>() {
     private var companiesList = listOf<Company>()

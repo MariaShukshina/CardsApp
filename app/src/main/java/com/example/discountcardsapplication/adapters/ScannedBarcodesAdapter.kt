@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.databinding.BarcodeformatItemBinding
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 
 class ScannedBarcodesAdapter : RecyclerView.Adapter<ScannedBarcodesAdapter.ScannedBarcodesViewHolder>() {
     private var barcodesList = listOf<GeneratedResult>()

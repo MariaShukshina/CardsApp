@@ -2,8 +2,10 @@ package com.example.discountcardsapplication.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.discountcardsapplication.database.CardsDatabase
-import com.example.discountcardsapplication.database.CardsDatabase.Companion.DATABASE_NAME
+import com.example.discountcardsapplication.data.data_source.CardsDatabase
+import com.example.discountcardsapplication.data.data_source.CardsDatabase.Companion.DATABASE_NAME
+import com.example.discountcardsapplication.data.repositoryimpl.CardRepositoryImpl
+import com.example.discountcardsapplication.domain.repository.CardRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +23,10 @@ object AppModule {
         CardsDatabase::class.java,
         DATABASE_NAME
     ).build()
+
+    @Provides
+    @Singleton
+    fun provideCardRepository(db: CardsDatabase): CardRepository {
+        return CardRepositoryImpl(db.getCardsDao())
+    }
 }

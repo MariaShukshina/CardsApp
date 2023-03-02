@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentFavoritesBinding
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.utils.CodeGenerator
-import com.example.discountcardsapplication.utils.FilterListUtil
-import com.example.discountcardsapplication.utils.OnCardClickUtil
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.utils.CodeGenerator
+import com.example.discountcardsapplication.domain.utils.FilterListUtil
+import com.example.discountcardsapplication.domain.utils.OnCardClickUtil
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

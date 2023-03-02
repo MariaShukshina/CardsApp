@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.databinding.ChooseBarcodeformatCustomDialogBinding
-import com.example.discountcardsapplication.models.GeneratedBarcodeForUserToChoose
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.GeneratedBarcodeForUserToChoose
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 
 class ChooseBarcodeFormatCustomDialog(

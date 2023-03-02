@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentHomeBinding
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.utils.CodeGenerator
-import com.example.discountcardsapplication.utils.FilterListUtil
-import com.example.discountcardsapplication.utils.OnCardClickUtil
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.utils.CodeGenerator
+import com.example.discountcardsapplication.domain.utils.FilterListUtil
+import com.example.discountcardsapplication.domain.utils.OnCardClickUtil
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint

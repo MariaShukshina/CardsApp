@@ -1,10 +1,8 @@
-package com.example.discountcardsapplication.database
+package com.example.discountcardsapplication.data.data_source
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.discountcardsapplication.models.Card
+import com.example.discountcardsapplication.domain.models.Card
 
 @Database(entities = [Card::class], version = 1)
 

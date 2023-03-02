@@ -32,9 +32,9 @@ import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompany
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.CODE
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.models.GeneratedResult
-import com.example.discountcardsapplication.utils.CodeGenerator
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.models.GeneratedResult
+import com.example.discountcardsapplication.domain.utils.CodeGenerator
 import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter

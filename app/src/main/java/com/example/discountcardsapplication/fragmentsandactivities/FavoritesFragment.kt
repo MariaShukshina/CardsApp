@@ -27,7 +27,7 @@ class FavoritesFragment : Fragment() {
     private lateinit var savedCardsAdapter: SavedCardsAdapter
     private lateinit var favSearchView: SearchView
     private var favoritesList = ArrayList<Card>()
-    private var isShowingNoData = false
+    private var isShowingData = true
     private var searchText: String? = null
 
     private val mainActivityViewModel by viewModels<MainActivityViewModel>()
@@ -74,12 +74,12 @@ class FavoritesFragment : Fragment() {
             return list
         }
         val filteredList = FilterListUtil.filterList(text, list)
-        if (filteredList.isEmpty() && !isShowingNoData) {
-            isShowingNoData = true
+        if (filteredList.isEmpty() && isShowingData) {
+            isShowingData = false
             Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
         }
         if (filteredList.isNotEmpty()) {
-            isShowingNoData = false
+            isShowingData = true
         }
         return filteredList
     }

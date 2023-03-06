@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
     private lateinit var savedCardsAdapter: SavedCardsAdapter
     private lateinit var searchView: SearchView
     private lateinit var savedCardsList: List<Card>
-    private var isShowingNoData = false
+    private var isShowingData = true
     private var searchText: String? = null
 
     private val mainActivityViewModel by viewModels<MainActivityViewModel>()
@@ -80,12 +80,12 @@ class HomeFragment : Fragment() {
             return list
         }
         val filteredList = FilterListUtil.filterList(text, list)
-        if (filteredList.isEmpty() && !isShowingNoData) {
-            isShowingNoData = true
+        if (filteredList.isEmpty() && isShowingData) {
+            isShowingData = false
             Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
         }
         if (filteredList.isNotEmpty()) {
-            isShowingNoData = false
+            isShowingData = true
         }
         return filteredList
     }

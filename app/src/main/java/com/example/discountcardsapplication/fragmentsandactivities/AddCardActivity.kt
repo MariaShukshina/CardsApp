@@ -185,17 +185,19 @@ class AddCardActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             binding.etCardNumber.text.isNullOrEmpty() -> {
                 Toast.makeText(
                     this,
                     "Please scan your card or enter " +
-                        "a card number manually.",
+                            "a card number manually.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             else -> {
                 if (barcodeFormat != null && code != null) {
-                    val card = createAutomaticScannedCard()
+                    val card = createCard()
                     addCardActivityViewModel.insertCard(card)
                     finish()
                 } else {
@@ -208,56 +210,7 @@ class AddCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
-        val barcodeFormatsList = listOf(
-            BarcodeFormat.CODE_39,
-            BarcodeFormat.CODE_128,
-            BarcodeFormat.EAN_8,
-            BarcodeFormat.EAN_13,
-            BarcodeFormat.QR_CODE
-        )
-        val generatedResultsList = ArrayList<GeneratedResult>()
-        for (barcodeFormat in barcodeFormatsList) {
-            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
-                binding.etCardNumber.text.toString(),
-                barcodeFormat
-            )
-            if (generatedResult.bitmap != null) {
-                generatedResultsList.add(generatedResult)
-            }
-        }
-        if (generatedResultsList.isNotEmpty()) {
-            val chooseBarcodeFormatCustomDialog =
-                ChooseBarcodeFormatCustomDialog(this, generatedResultsList) {
-                    barcodeFormat = it.barcodeFormat
-                    code = it.code
-                    val card = Card(
-                        id = 0,
-                        companyName = binding.etCompanyName.text.toString(),
-                        barcodeFormat = barcodeFormat,
-                        qrOrBarCode = code
-                    )
-                    if (customImage != null) {
-                        card.customImage = customImage.toString()
-                    } else if (imageResource != 0) {
-                        card.imageResource = imageResource
-                    } else {
-                        card.imageResource = R.drawable.ic_placeholder
-                    }
-                    createdCardHandler.invoke(card)
-                }
-            chooseBarcodeFormatCustomDialog.show()
-            chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
-        } else {
-            Toast.makeText(
-                this@AddCardActivity,
-                "Please check the code you've entered.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun createAutomaticScannedCard(): Card {
+    private fun createCard(): Card {
         val card = Card(
             id = 0,
             companyName = binding.etCompanyName.text.toString(),
@@ -272,6 +225,40 @@ class AddCardActivity : AppCompatActivity() {
             card.imageResource = R.drawable.ic_placeholder
         }
         return card
+    }
+
+    private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
+        val generatedResultsList = ArrayList<GeneratedResult>()
+        for (barcodeFormat in BARCODE_FORMAT_LIST) {
+            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
+                binding.etCardNumber.text.toString(),
+                barcodeFormat
+            )
+            if (generatedResult.bitmap != null) {
+                generatedResultsList.add(generatedResult)
+            }
+        }
+        if (generatedResultsList.isNotEmpty()) {
+            openChooseBarcodeFormatDialog(generatedResultsList, createdCardHandler)
+        } else {
+            Toast.makeText(
+                this@AddCardActivity,
+                "Please check the code you've entered.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun openChooseBarcodeFormatDialog(list: ArrayList<GeneratedResult>, createdCardHandler: (card: Card) -> Unit){
+        val chooseBarcodeFormatCustomDialog =
+            ChooseBarcodeFormatCustomDialog(this, list) {
+                barcodeFormat = it.barcodeFormat
+                code = it.code
+                val card = createCard()
+                createdCardHandler.invoke(card)
+            }
+        chooseBarcodeFormatCustomDialog.show()
+        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
     }
 
     private fun openScanActivity() {
@@ -318,7 +305,7 @@ class AddCardActivity : AppCompatActivity() {
     private fun showRationaleDialogForPermissions(permissionToken: PermissionToken?) {
         AlertDialog.Builder(this).setMessage(
             "Permission required for this feature is denied. " +
-                "It can be enabled in the application settings."
+                    "It can be enabled in the application settings."
         )
             .setPositiveButton("Enable permission") { _, _ ->
                 if (permissionToken != null) {
@@ -393,9 +380,13 @@ class AddCardActivity : AppCompatActivity() {
         var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
         file = File(file, "${UUID.randomUUID()}.jgp")
 
+        return saveImage(bitmap, file, BITMAP_QUALITY, Bitmap.CompressFormat.JPEG)
+    }
+
+    private fun saveImage(bitmap: Bitmap, file: File, quality: Int, compressFormat: Bitmap.CompressFormat): Uri {
         try {
             val stream: OutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, stream)
+            bitmap.compress(compressFormat, quality, stream)
             stream.flush()
             stream.close()
         } catch (e: IOException) {
@@ -405,6 +396,13 @@ class AddCardActivity : AppCompatActivity() {
     }
 
     companion object {
+        private val BARCODE_FORMAT_LIST = listOf(
+            BarcodeFormat.CODE_39,
+            BarcodeFormat.CODE_128,
+            BarcodeFormat.EAN_8,
+            BarcodeFormat.EAN_13,
+            BarcodeFormat.QR_CODE
+        )
         private const val BITMAP_QUALITY = 100
         private const val IMAGE_DIRECTORY = "DiscountCardsImages"
         private const val PREFERENCE_NAME = "PermissionCheck"

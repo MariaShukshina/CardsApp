@@ -56,7 +56,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilCompanyName"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputLayoutStyle"
         android:layout_width="match_parent"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
@@ -76,7 +76,6 @@
             android:layout_height="wrap_content"
             android:hint="@string/company_name"
             android:inputType="text"
-            android:textColor="@color/black"
             android:textColorHint="@color/teal_700"
             android:textCursorDrawable="@null"
             android:textSize="16sp" />
@@ -91,7 +90,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilCardNumber"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:layout_height="wrap_content"
@@ -112,7 +111,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/card_number"
                 android:inputType="text"
-                android:textColor="@color/black"
                 android:textColorHint="@color/teal_700"
                 android:textSize="16sp"
                 android:textCursorDrawable="@null" />

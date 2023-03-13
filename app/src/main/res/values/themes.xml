@@ -15,6 +15,7 @@
     </style>
 
     <style name="CustomToolbarStyle">
+        <item name="android:background">@color/teal_200</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="colorControlNormal">#FFFFFF</item>
     </style>

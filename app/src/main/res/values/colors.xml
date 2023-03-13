@@ -7,5 +7,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="salmon">#CD5C5C</color>
     <color name="light_salmon">#FA8072</color>
+    <color name="light_gray">#C0C0C0</color>
+    <color name="darkest_gray">#161716</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#353A3A</color>
 
 </resources>

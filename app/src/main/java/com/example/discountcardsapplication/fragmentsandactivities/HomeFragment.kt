@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionInflater
+import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentHomeBinding
 import com.example.discountcardsapplication.domain.models.Card
@@ -39,6 +41,9 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedCardsAdapter = SavedCardsAdapter(activity as MainActivity)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.fade)
+        exitTransition = inflater.inflateTransition(R.transition.fade)
     }
 
     override fun onCreateView(

@@ -8,7 +8,6 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarSearchCards"
-        android:background="@color/teal_200"
         android:layout_width="match_parent"
         android:theme="@style/CustomToolbarStyle"
         android:layout_height="?attr/actionBarSize"

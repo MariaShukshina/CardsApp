@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.TransitionInflater
+import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentFavoritesBinding
 import com.example.discountcardsapplication.domain.models.Card
@@ -35,6 +37,9 @@ class FavoritesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedCardsAdapter = SavedCardsAdapter(activity as MainActivity)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.fade)
+        exitTransition = inflater.inflateTransition(R.transition.fade)
     }
 
     override fun onCreateView(

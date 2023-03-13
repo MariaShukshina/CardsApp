@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.discountcardsapplication.R
-import com.example.discountcardsapplication.databinding.ActivityAddOrEditCardBinding
+import com.example.discountcardsapplication.databinding.ActivityAddCardBinding
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
@@ -51,7 +51,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class AddCardActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddOrEditCardBinding
+    private lateinit var binding: ActivityAddCardBinding
     private var companyName: String = ""
     private var imageResource: Int = 0
     private var customImage: Uri? = null
@@ -83,7 +83,7 @@ class AddCardActivity : AppCompatActivity() {
             false
         )
 
-        binding = ActivityAddOrEditCardBinding.inflate(layoutInflater)
+        binding = ActivityAddCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.etCompanyName.addTextChangedListener {
             setupButtonDoneColor()

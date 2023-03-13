@@ -32,8 +32,8 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var savedCardsAdapter: SavedCardsAdapter
     private lateinit var searchView: SearchView
-    private lateinit var savedCardsList: List<Card>
-    private var isShowingData = true
+    private var savedCardsList: List<Card> = listOf()
+    private var isShowingNoData = true
     private var searchText: String? = null
 
     private val mainActivityViewModel by viewModels<MainActivityViewModel>()
@@ -74,7 +74,9 @@ class HomeFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchText = newText
-                savedCardsAdapter.differ.submitList(filterSavedCards(newText, savedCardsList))
+                if(savedCardsList.isNotEmpty()) {
+                    savedCardsAdapter.differ.submitList(filterSavedCards(newText, savedCardsList))
+                }
                 return true
             }
         })

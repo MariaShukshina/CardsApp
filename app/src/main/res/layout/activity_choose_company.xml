@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
             android:contentDescription="@string/add_new_card_button"
-            app:tint="@color/white"
             app:fabCustomSize="50dp"
             app:srcCompat="@drawable/ic_add" />
 

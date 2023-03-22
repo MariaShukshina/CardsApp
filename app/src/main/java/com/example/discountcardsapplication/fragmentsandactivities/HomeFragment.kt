@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var savedCardsAdapter: SavedCardsAdapter
     private lateinit var searchView: SearchView
     private var savedCardsList: List<Card> = listOf()
-    private var isShowingNoData = true
+    private var isShowingData = true
     private var searchText: String? = null
 
     private val mainActivityViewModel by viewModels<MainActivityViewModel>()

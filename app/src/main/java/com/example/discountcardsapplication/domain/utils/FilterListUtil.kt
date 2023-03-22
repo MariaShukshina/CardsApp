@@ -1,7 +1,7 @@
-package com.example.discountcardsapplication.utils
+package com.example.discountcardsapplication.domain.utils
 
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.models.Company
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.models.Company
 import java.util.*
 
 object FilterListUtil {

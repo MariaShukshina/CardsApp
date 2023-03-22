@@ -1,8 +1,8 @@
-package com.example.discountcardsapplication.utils
+package com.example.discountcardsapplication.domain.utils
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix

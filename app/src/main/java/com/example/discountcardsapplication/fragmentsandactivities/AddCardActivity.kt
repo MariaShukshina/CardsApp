@@ -22,34 +22,34 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import com.example.discountcardsapplication.R
-import com.example.discountcardsapplication.database.CardsDatabase
 import com.example.discountcardsapplication.databinding.ActivityAddCardBinding
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_IMAGE
 import com.example.discountcardsapplication.fragmentsandactivities.ChooseCompanyActivity.Companion.COMPANY_NAME
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.BARCODE_FORMAT
 import com.example.discountcardsapplication.fragmentsandactivities.ScanCardActivity.Companion.CODE
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.models.GeneratedResult
-import com.example.discountcardsapplication.utils.CodeGenerator
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.models.GeneratedResult
+import com.example.discountcardsapplication.domain.utils.CodeGenerator
 import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
-import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModelFactory
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.BasePermissionListener
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.*
 
+@AndroidEntryPoint
 class AddCardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddCardBinding
     private var companyName: String = ""
@@ -61,6 +61,8 @@ class AddCardActivity : AppCompatActivity() {
     private lateinit var mSharedPreferences: SharedPreferences
     private var isReadExternalStoragePermissionRequested = false
 
+    private val addCardActivityViewModel by viewModels<AddCardActivityViewModel>()
+
     private val startScanActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             handleScannedData(result)
@@ -69,12 +71,6 @@ class AddCardActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             handleGalleryActivityData(result)
         }
-
-    private val viewModel: AddCardActivityViewModel by lazy {
-        val cardsDatabase = CardsDatabase.getInstance(this)
-        val factory = AddCardActivityViewModelFactory(cardsDatabase)
-        ViewModelProvider(this, factory)[AddCardActivityViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,22 +185,24 @@ class AddCardActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             binding.etCardNumber.text.isNullOrEmpty() -> {
                 Toast.makeText(
                     this,
                     "Please scan your card or enter " +
-                        "a card number manually.",
+                            "a card number manually.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             else -> {
                 if (barcodeFormat != null && code != null) {
-                    val card = createAutomaticScannedCard()
-                    viewModel.insertCard(card)
+                    val card = createCard()
+                    addCardActivityViewModel.insertCard(card)
                     finish()
                 } else {
                     createCardManually {
-                        viewModel.insertCard(it)
+                        addCardActivityViewModel.insertCard(it)
                         finish()
                     }
                 }
@@ -212,56 +210,7 @@ class AddCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
-        val barcodeFormatsList = listOf(
-            BarcodeFormat.CODE_39,
-            BarcodeFormat.CODE_128,
-            BarcodeFormat.EAN_8,
-            BarcodeFormat.EAN_13,
-            BarcodeFormat.QR_CODE
-        )
-        val generatedResultsList = ArrayList<GeneratedResult>()
-        for (barcodeFormat in barcodeFormatsList) {
-            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
-                binding.etCardNumber.text.toString(),
-                barcodeFormat
-            )
-            if (generatedResult.bitmap != null) {
-                generatedResultsList.add(generatedResult)
-            }
-        }
-        if (generatedResultsList.isNotEmpty()) {
-            val chooseBarcodeFormatCustomDialog =
-                ChooseBarcodeFormatCustomDialog(this, generatedResultsList) {
-                    barcodeFormat = it.barcodeFormat
-                    code = it.code
-                    val card = Card(
-                        id = 0,
-                        companyName = binding.etCompanyName.text.toString(),
-                        barcodeFormat = barcodeFormat,
-                        qrOrBarCode = code
-                    )
-                    if (customImage != null) {
-                        card.customImage = customImage.toString()
-                    } else if (imageResource != 0) {
-                        card.imageResource = imageResource
-                    } else {
-                        card.imageResource = R.drawable.ic_placeholder
-                    }
-                    createdCardHandler.invoke(card)
-                }
-            chooseBarcodeFormatCustomDialog.show()
-            chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
-        } else {
-            Toast.makeText(
-                this@AddCardActivity,
-                "Please check the code you've entered.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    private fun createAutomaticScannedCard(): Card {
+    private fun createCard(): Card {
         val card = Card(
             id = 0,
             companyName = binding.etCompanyName.text.toString(),
@@ -276,6 +225,40 @@ class AddCardActivity : AppCompatActivity() {
             card.imageResource = R.drawable.ic_placeholder
         }
         return card
+    }
+
+    private fun createCardManually(createdCardHandler: (card: Card) -> Unit) {
+        val generatedResultsList = ArrayList<GeneratedResult>()
+        for (barcodeFormat in BARCODE_FORMAT_LIST) {
+            val generatedResult = CodeGenerator().generateQROrBarcodeImage(
+                binding.etCardNumber.text.toString(),
+                barcodeFormat
+            )
+            if (generatedResult.bitmap != null) {
+                generatedResultsList.add(generatedResult)
+            }
+        }
+        if (generatedResultsList.isNotEmpty()) {
+            openChooseBarcodeFormatDialog(generatedResultsList, createdCardHandler)
+        } else {
+            Toast.makeText(
+                this@AddCardActivity,
+                "Please check the code you've entered.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun openChooseBarcodeFormatDialog(list: ArrayList<GeneratedResult>, createdCardHandler: (card: Card) -> Unit){
+        val chooseBarcodeFormatCustomDialog =
+            ChooseBarcodeFormatCustomDialog(this, list) {
+                barcodeFormat = it.barcodeFormat
+                code = it.code
+                val card = createCard()
+                createdCardHandler.invoke(card)
+            }
+        chooseBarcodeFormatCustomDialog.show()
+        chooseBarcodeFormatCustomDialog.setCanceledOnTouchOutside(false)
     }
 
     private fun openScanActivity() {
@@ -322,7 +305,7 @@ class AddCardActivity : AppCompatActivity() {
     private fun showRationaleDialogForPermissions(permissionToken: PermissionToken?) {
         AlertDialog.Builder(this).setMessage(
             "Permission required for this feature is denied. " +
-                "It can be enabled in the application settings."
+                    "It can be enabled in the application settings."
         )
             .setPositiveButton("Enable permission") { _, _ ->
                 if (permissionToken != null) {
@@ -397,9 +380,13 @@ class AddCardActivity : AppCompatActivity() {
         var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
         file = File(file, "${UUID.randomUUID()}.jgp")
 
+        return saveImage(bitmap, file, BITMAP_QUALITY, Bitmap.CompressFormat.JPEG)
+    }
+
+    private fun saveImage(bitmap: Bitmap, file: File, quality: Int, compressFormat: Bitmap.CompressFormat): Uri {
         try {
             val stream: OutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, stream)
+            bitmap.compress(compressFormat, quality, stream)
             stream.flush()
             stream.close()
         } catch (e: IOException) {
@@ -409,6 +396,13 @@ class AddCardActivity : AppCompatActivity() {
     }
 
     companion object {
+        private val BARCODE_FORMAT_LIST = listOf(
+            BarcodeFormat.CODE_39,
+            BarcodeFormat.CODE_128,
+            BarcodeFormat.EAN_8,
+            BarcodeFormat.EAN_13,
+            BarcodeFormat.QR_CODE
+        )
         private const val BITMAP_QUALITY = 100
         private const val IMAGE_DIRECTORY = "DiscountCardsImages"
         private const val PREFERENCE_NAME = "PermissionCheck"

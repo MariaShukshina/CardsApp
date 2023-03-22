@@ -1,4 +1,4 @@
-package com.example.discountcardsapplication.utils;
+package com.example.discountcardsapplication.domain.utils;
 
 public class EAN13CodeBuilder {
     private final String codeStringValue;

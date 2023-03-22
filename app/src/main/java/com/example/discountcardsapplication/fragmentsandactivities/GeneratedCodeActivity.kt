@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.databinding.ActivityGeneratedCodeBinding
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 
 class GeneratedCodeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGeneratedCodeBinding

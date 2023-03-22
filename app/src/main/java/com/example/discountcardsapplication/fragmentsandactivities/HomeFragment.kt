@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,25 +19,27 @@ import androidx.transition.TransitionInflater
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.SavedCardsAdapter
 import com.example.discountcardsapplication.databinding.FragmentHomeBinding
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.utils.CodeGenerator
-import com.example.discountcardsapplication.utils.FilterListUtil
-import com.example.discountcardsapplication.utils.OnCardClickUtil
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.utils.CodeGenerator
+import com.example.discountcardsapplication.domain.utils.FilterListUtil
+import com.example.discountcardsapplication.domain.utils.OnCardClickUtil
 import com.example.discountcardsapplication.viewmodels.MainActivityViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var savedCardsAdapter: SavedCardsAdapter
-    private lateinit var mainActivityViewModel: MainActivityViewModel
     private lateinit var searchView: SearchView
     private var savedCardsList: List<Card> = listOf()
-    private var isShowingNoData = false
+    private var isShowingData = true
     private var searchText: String? = null
+
+    private val mainActivityViewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityViewModel = (activity as MainActivity).viewModel
         savedCardsAdapter = SavedCardsAdapter(activity as MainActivity)
         val inflater = TransitionInflater.from(requireContext())
         enterTransition = inflater.inflateTransition(R.transition.fade)
@@ -84,12 +87,12 @@ class HomeFragment : Fragment() {
             return list
         }
         val filteredList = FilterListUtil.filterList(text, list)
-        if (filteredList.isEmpty() && !isShowingNoData) {
-            isShowingNoData = true
+        if (filteredList.isEmpty() && isShowingData) {
+            isShowingData = false
             Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
         }
         if (filteredList.isNotEmpty()) {
-            isShowingNoData = false
+            isShowingData = true
         }
         return filteredList
     }

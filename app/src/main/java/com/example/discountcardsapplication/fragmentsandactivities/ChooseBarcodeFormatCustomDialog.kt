@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.adapters.ScannedBarcodesAdapter
 import com.example.discountcardsapplication.databinding.ChooseBarcodeformatCustomDialogBinding
-import com.example.discountcardsapplication.models.GeneratedBarcodeForUserToChoose
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.GeneratedBarcodeForUserToChoose
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 import com.google.zxing.BarcodeFormat
 
 class ChooseBarcodeFormatCustomDialog(
@@ -35,15 +35,19 @@ class ChooseBarcodeFormatCustomDialog(
         scannedBarcodesAdapter = ScannedBarcodesAdapter()
         scannedBarcodesAdapter.setBarcodesList(generatedResultList)
 
-        val recyclerView = binding.rvFormats
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = scannedBarcodesAdapter
+        prepareRecyclerView()
 
         onItemClick()
 
         binding.buttonCancel.setOnClickListener(this)
         binding.buttonDone.setOnClickListener(this)
+    }
+
+    private fun prepareRecyclerView() {
+        binding.rvFormats.apply {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            adapter = scannedBarcodesAdapter
+        }
     }
 
     private fun onItemClick() {

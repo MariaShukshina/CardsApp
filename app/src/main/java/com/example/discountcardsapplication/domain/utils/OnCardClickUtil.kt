@@ -1,10 +1,10 @@
-package com.example.discountcardsapplication.utils
+package com.example.discountcardsapplication.domain.utils
 
 import android.content.Intent
 import com.example.discountcardsapplication.R
 import com.example.discountcardsapplication.fragmentsandactivities.GeneratedCodeActivity
-import com.example.discountcardsapplication.models.Card
-import com.example.discountcardsapplication.models.GeneratedResult
+import com.example.discountcardsapplication.domain.models.Card
+import com.example.discountcardsapplication.domain.models.GeneratedResult
 
 object OnCardClickUtil {
     fun addCardDataToIntent(intent: Intent, codeResult: GeneratedResult, card: Card) {

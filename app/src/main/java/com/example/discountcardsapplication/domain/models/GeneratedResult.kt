@@ -1,4 +1,4 @@
-package com.example.discountcardsapplication.models
+package com.example.discountcardsapplication.domain.models
 
 import android.graphics.Bitmap
 import android.os.Parcel

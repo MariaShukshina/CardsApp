@@ -1,4 +1,4 @@
-package com.example.discountcardsapplication.database
+package com.example.discountcardsapplication.data.data_source
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -7,7 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.discountcardsapplication.models.Card
+import com.example.discountcardsapplication.domain.models.Card
 
 @Dao
 interface CardsDao {

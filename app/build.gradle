@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id "io.gitlab.arturbosch.detekt" version "$detektVersion"
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -92,4 +93,8 @@ dependencies {
     //Detekt
     detekt "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+
+    //Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 }

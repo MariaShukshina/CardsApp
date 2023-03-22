@@ -8,16 +8,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.discountcardsapplication.adapters.CompaniesAdapter
 import com.example.discountcardsapplication.databinding.ActivityChooseCompanyBinding
-import com.example.discountcardsapplication.models.CompaniesList
-import com.example.discountcardsapplication.models.Company
-import com.example.discountcardsapplication.utils.FilterListUtil
+import com.example.discountcardsapplication.domain.models.CompaniesList
+import com.example.discountcardsapplication.domain.models.Company
+import com.example.discountcardsapplication.domain.utils.FilterListUtil
 
 class ChooseCompanyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChooseCompanyBinding
     private lateinit var companiesAdapter: CompaniesAdapter
     private var companiesList = listOf<Company>()
     private lateinit var companiesSearchView: SearchView
-    private var isShowingNoData = false
+    private var isShowingData = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +45,12 @@ class ChooseCompanyActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 val filteredCompaniesList = FilterListUtil.filteredCompaniesList(newText, companiesList)
-                if (filteredCompaniesList.isEmpty() && !isShowingNoData) {
-                    isShowingNoData = true
+                if (filteredCompaniesList.isEmpty() && isShowingData) {
+                    isShowingData = false
                     Toast.makeText(this@ChooseCompanyActivity, "No data found", Toast.LENGTH_SHORT).show()
                 }
                 if (filteredCompaniesList.isNotEmpty()) {
-                    isShowingNoData = false
+                    isShowingData = true
                 }
                 companiesAdapter.setCompaniesList(filteredCompaniesList)
                 return true

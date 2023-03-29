@@ -39,6 +39,7 @@ import com.example.discountcardsapplication.viewmodels.AddCardActivityViewModel
 import com.google.zxing.BarcodeFormat
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.BasePermissionListener
@@ -276,6 +277,10 @@ class AddCardActivity : AppCompatActivity() {
                     }
                 }
 
+                override fun onPermissionDenied(p: PermissionDeniedResponse?) {
+                    tryToHideScanButton()
+                }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permissionRequest: PermissionRequest?,
                     permissionToken: PermissionToken?
@@ -286,7 +291,6 @@ class AddCardActivity : AppCompatActivity() {
                         IS_CAMERA_PERMISSION_CHECKED,
                         isCameraPermissionRequested
                     ).apply()
-                    tryToHideScanButton()
                 }
             }).onSameThread().check()
     }
@@ -360,6 +364,10 @@ class AddCardActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onPermissionDenied(p: PermissionDeniedResponse?) {
+                tryToHideChooseFromGalleryButton()
+            }
+
             override fun onPermissionRationaleShouldBeShown(
                 permissionRequest: PermissionRequest?,
                 permissionToken: PermissionToken?
@@ -370,7 +378,6 @@ class AddCardActivity : AppCompatActivity() {
                     IS_EXTERNAL_STORAGE_PERMISSION_CHECKED,
                     isReadExternalStoragePermissionRequested
                 ).apply()
-                tryToHideChooseFromGalleryButton()
             }
         }).onSameThread().check()
     }

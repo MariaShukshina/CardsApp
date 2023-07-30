@@ -1,5 +1,5 @@
 # cardsapp
-Application for scanning and local storage of discount cards
+Application for scanning and local storage of discount cards. UI is made with xml layouts.
 
 
 ![photo_4_2023-06-20_21-20-11](https://github.com/MariaShukshina/cardsapp/assets/64134936/8a4da367-0352-4261-89d6-c4476c3f6b3e)

@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.discountcardsapplication'
+    namespace 'com.mshukshina.discountcardsapplication'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.discountcardsapplication"
+        applicationId "com.mshukshina.discountcardsapplication"
         minSdk 21
         targetSdk 32
         versionCode 1
